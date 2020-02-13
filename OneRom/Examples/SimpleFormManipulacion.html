@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html >
+    <head>        
+        <!--<script src="../src/OneRom.js" type="text/javascript"></script>-->
+        <script src="../src/OneRom.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <br>
+        <br>
+
+        <label>
+            Nombre
+        </label>
+        <input type="text" x-value="Nombre" />
+        <hr>
+        <br>
+        <label>
+            Apellidos
+        </label>
+        <input type="text" x-value="Apellidos" />
+        <hr>
+        <br>
+        <label>
+            Sexo
+        </label>            
+        <select x-value="Sexo">
+            <option value="H">Hombre</option>
+            <option value="M">Mujer</option>
+        </select>
+
+
+        <hr>
+        <br>
+        <input type="button" value="Mostrar Valores" onclick="MostrarValores();"/>
+        
+        
+
+        <script>
+            Debug = true;
+
+            function MostrarValores() {
+                alert("Tu nombre es: "+Door.Nombre);
+                
+                alert("Tus apellidos son:"+Door.Apellidos)
+                var Genero = Door.Sexo=="H"?"Hombre":"Mujer";
+                alert("Tu genero es: "+Genero);
+                
+            }
+        </script>
+
+    </body>
+
+
+</html>

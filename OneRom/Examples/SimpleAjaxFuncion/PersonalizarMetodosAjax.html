@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html >
+    <head>        
+        <!--<script src="../src/OneRom.js" type="text/javascript"></script>-->
+        <script src="../../src/OneRom.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <br>
+        <br>
+        <hr>
+        <button x-value="BotonAjax">Cargar contenido</button>
+
+        <hr>
+        <div x-value="DivAjax">
+
+
+
+        </div>
+
+
+
+        <script>
+            //Debug = true;
+            SingleGetControls = true;
+            var Boton = Door.BotonAjax;
+
+            function CargarContenido() {
+                //var Dataform= new FormData();
+                //Dataform.append("Id",10);
+
+                var Success = function (Result) {
+                    SingleGetControls = true;
+                    var Div = Door.DivAjax;
+
+                    Div.innerHTML = Result;
+
+                }
+
+                var Call = new Ajax("GET.txt", null, Success, "GET", false);
+
+                Call.UpdateProgress = function (e) {
+
+                    if (e.lengthComputable) {
+                        alert("Inicio subida");
+                    }
+
+                }
+
+                Call.TransferComplete = function (e) {
+                    alert("Se transfirio toda la informacion");
+                }
+
+
+                Call.TransferFailed = function (e) {
+                    alert("Fallo la subida de informacion");
+                }
+
+                Call.TransferCanceled = function (e) {
+                    alert("Se cancelo la subida de informacion")
+                }
+
+
+
+                Call.Send();
+
+
+            }
+
+            Boton.onclick = CargarContenido;
+
+        </script>
+
+    </body>
+
+
+</html>
