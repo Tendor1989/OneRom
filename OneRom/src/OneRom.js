@@ -96,7 +96,7 @@ function CargarPaginaNavegacionAjax(Dom, ParamUrl, EsInicio = false) {
 AjaxFailServidor = function (event) {
     if (Debug) {
         console.log(event);
-    }    
+    }
 };
 
 /**
@@ -107,7 +107,7 @@ AjaxFailServidor = function (event) {
  * @param Metod :  Tipo de envio (POST/GET) default POST
  * @param RetrivalJson :  Objeto respuesta es JSON por default
  **/
-function Ajax(Url, Data, Success, Metod="POST",RetrivalJson=true) {
+function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
     /**
      * Progreso
      * Se ejecuta mientra se esta enviando informacion
@@ -122,12 +122,12 @@ function Ajax(Url, Data, Success, Metod="POST",RetrivalJson=true) {
      *              }                                            
      *          }
      * 
-    **/
+     **/
     this.UpdateProgress = function (evt) {
         if (evt.lengthComputable && Debug) {
-            var percentComplete = evt.loaded / evt.total;  
-            console.log("Se a tranferido "+percentComplete);
-        } 
+            var percentComplete = evt.loaded / evt.total;
+            console.log("Se a tranferido " + percentComplete);
+        }
     };
     /**
      * Completado
@@ -140,11 +140,11 @@ function Ajax(Url, Data, Success, Metod="POST",RetrivalJson=true) {
      *              alert("Se transfirio toda la informacion");
      *          }
      * 
-    **/
+     **/
     this.TransferComplete = function (event) {
         if (Debug) {
             console.log("La transferencia se completo.");
-        }        
+        }
     };
     /**
      * Fallado
@@ -157,11 +157,11 @@ function Ajax(Url, Data, Success, Metod="POST",RetrivalJson=true) {
      *              alert("Fallo la subida de informacion");
      *          }
      * 
-    **/
+     **/
     this.TransferFailed = function (event) {
         if (Debug) {
             console.log("Ocurrio un error al tranferir la informacion.");
-        }        
+        }
     };
     /**
      * Cancelado
@@ -174,35 +174,34 @@ function Ajax(Url, Data, Success, Metod="POST",RetrivalJson=true) {
      *              alert("Se cancelo la subida de informacion")
      *          }
      * 
-    **/
+     **/
     this.TransferCanceled = function (event) {
         if (Debug) {
             console.log("se cancelo la tranferencia de informacion.");
-        }                
+        }
     };
 
 
     var Request = new XMLHttpRequest();
-    
+
     Request.open(Metod.toUpperCase(), Url, true);
 
     /**
      * Send
      * POST/GET a la url introducida
-    **/
+     **/
     this.Send = function () {
         Request.addEventListener("progress", this.UpdateProgress, false);
         Request.addEventListener("load", this.TransferComplete, false);
         Request.addEventListener("error", this.TransferFailed, false);
         Request.addEventListener("abort", this.TransferCanceled, false);
 
-        if (Data!=null) {
+        if (Data != null) {
             Request.send(Data);
-        }
-        else{
+        } else {
             Request.send();
         }
-        
+
 
         Request.onreadystatechange = function (event) {
             if (Request.readyState == 4) {
@@ -211,15 +210,17 @@ function Ajax(Url, Data, Success, Metod="POST",RetrivalJson=true) {
                     var result = null;
 
                     try {
-                        Success(JSON.parse(Request.response));
+                        result = JSON.parse(Request.response);
+                        Success(result);
                     } catch (e) {
-                        if (!RetrivalJson) {
+                        if (!e.message.includes("JSON.parse")) {
+                            AjaxFailServidor(e.message);
+                        } else if (!RetrivalJson) {
                             Success(Request.response);
-                        }
-                        else{
+                        } else {
                             AjaxFailServidor(Request.response);
                         }
-                        
+
                     }
 
 
@@ -381,13 +382,21 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
         if (!nombreControl || nombreControl == undefined || nombreControl == "" || nombreControl.length == 0) {
             return true;
         }
-        var Control = document.querySelector("[x-value='"+nombreControl+"']");
+        var Control = document.querySelector("[x-value='" + nombreControl + "']");
 
         if (Control.type == "file") {
             return Control.files;
         }
         if (Control.type == "checkbox") {
             return Control.checked;
+        }
+        if (Control.localName == "select" && Control.multiple) {
+
+            var Select = [];
+            for (var opcion of Control.selectedOptions) {
+                Select.push(opcion.value);
+            }
+            return Select;
         }
         return valor;
     }
@@ -440,9 +449,18 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
 
                         _PropiedadPrivada1 = Control;
 
-                        if (Control.type != "file") {
+                        if (Control.localName == "select" && Control.multiple && Array.isArray(value)) {
+
+                            for (var i = 0; i < Control.options.length; i++) {
+                                Control.options[i].selected = value.indexOf(Control.options[i].value) >= 0;
+                            }
+
+                        } else if (Control.type != "file") {
                             Control.value = value;
                         }
+
+
+
 
                         //Maquetar();
                     }
