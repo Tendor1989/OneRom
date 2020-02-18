@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 11 febrero 2020
+// Last Update  : 17 febrero 2020
 // ============================================================+
 
 
@@ -99,6 +99,19 @@ AjaxFailServidor = function (event) {
     }
 };
 
+AjaxStartServidor = function () {
+    if (Debug) {
+        console.log("Inicia POST/GET");
+    }
+};
+
+AjaxFinallyServidor=function (){
+    if (Debug) {
+        console.log("Finaliso POST/GET");
+    }
+    
+}
+
 /**
  * Ajax
  * @param Url :  Url POST/GET
@@ -191,6 +204,9 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
      * POST/GET a la url introducida
      **/
     this.Send = function () {
+        
+        AjaxStartServidor();
+        
         Request.addEventListener("progress", this.UpdateProgress, false);
         Request.addEventListener("load", this.TransferComplete, false);
         Request.addEventListener("error", this.TransferFailed, false);
@@ -222,13 +238,15 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
                         }
 
                     }
-
-
+                    AjaxFinallyServidor();
 
                 } else {
                     AjaxFailServidor("Fallo el servidor intente mas tarde");
+                    AjaxFinallyServidor();
                 }
             }
+            
+            
 
 
         }
