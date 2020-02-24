@@ -105,11 +105,11 @@ AjaxStartServidor = function () {
     }
 };
 
-AjaxFinallyServidor=function (){
+AjaxFinallyServidor = function () {
     if (Debug) {
         console.log("Finaliso POST/GET");
     }
-    
+
 }
 
 /**
@@ -204,9 +204,9 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
      * POST/GET a la url introducida
      **/
     this.Send = function () {
-        
+
         AjaxStartServidor();
-        
+
         Request.addEventListener("progress", this.UpdateProgress, false);
         Request.addEventListener("load", this.TransferComplete, false);
         Request.addEventListener("error", this.TransferFailed, false);
@@ -245,8 +245,8 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
                     AjaxFinallyServidor();
                 }
             }
-            
-            
+
+
 
 
         }
@@ -330,9 +330,7 @@ function Restart() {
         if (item.ready !== undefined) {
             continue;
         }
-        if (item.type == "file") {
-            item.changeFile = new ChangeFile(item);
-        }
+        
         item.change = item.onchange;
         item.onchange = null;
         item.onchange = function () {
@@ -340,9 +338,7 @@ function Restart() {
             if (Debug) {
                 console.log(Door);
             }
-            if (item.type == "file") {
-                item.changeFile.run(item);
-            }
+            
             if (item.change != null) {
                 eval(item.change);
                 item.change();
@@ -362,9 +358,7 @@ function Restart() {
 }
 
 ReadyRom("[x-value]", function () {
-    if (this.type == "file") {
-        this.changeFile = new ChangeFile(this);
-    }
+    
     this.change = this.onchange;
     this.onchange = null;
     this.onchange = function () {
@@ -373,9 +367,7 @@ ReadyRom("[x-value]", function () {
         if (Debug) {
             console.log(Door);
         }
-        if (this.type == "file") {
-            this.changeFile.run(this);
-        }
+        
         if (this.change != null) {
             eval(this.change);
             this.change();
@@ -467,11 +459,21 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
 
                         _PropiedadPrivada1 = Control;
 
-                        if (Control.localName == "select" && Control.multiple && Array.isArray(value)) {
-
-                            for (var i = 0; i < Control.options.length; i++) {
-                                Control.options[i].selected = value.indexOf(Control.options[i].value) >= 0;
+                        if (Control == null) {
+                            if (Debug) {
+                                console.error("Control " + nombreControl + " no existe o fue eliminado");
                             }
+                        } else if (Control.localName == "select" && Control.multiple) {
+
+                            if (Array.isArray(value)) {
+                                for (var i = 0; i < Control.options.length; i++) {
+                                    Control.options[i].selected = value.indexOf(Control.options[i].value) >= 0;
+                                }
+                            }
+                            else if(value!=""){
+                                Control.value = value;
+                            }
+                            
 
                         } else if (Control.type != "file") {
                             Control.value = value;
