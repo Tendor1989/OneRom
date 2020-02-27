@@ -330,7 +330,7 @@ function Restart() {
         if (item.ready !== undefined) {
             continue;
         }
-        
+
         item.change = item.onchange;
         item.onchange = null;
         item.onchange = function () {
@@ -338,7 +338,7 @@ function Restart() {
             if (Debug) {
                 console.log(Door);
             }
-            
+
             if (item.change != null) {
                 eval(item.change);
                 item.change();
@@ -358,7 +358,7 @@ function Restart() {
 }
 
 ReadyRom("[x-value]", function () {
-    
+
     this.change = this.onchange;
     this.onchange = null;
     this.onchange = function () {
@@ -367,7 +367,7 @@ ReadyRom("[x-value]", function () {
         if (Debug) {
             console.log(Door);
         }
-        
+
         if (this.change != null) {
             eval(this.change);
             this.change();
@@ -469,11 +469,10 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
                                 for (var i = 0; i < Control.options.length; i++) {
                                     Control.options[i].selected = value.indexOf(Control.options[i].value) >= 0;
                                 }
-                            }
-                            else if(value!=""){
+                            } else if (value != "") {
                                 Control.value = value;
                             }
-                            
+
 
                         } else if (Control.type != "file") {
                             Control.value = value;

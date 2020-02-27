@@ -1,9 +1,27 @@
-<!DOCTYPE html>
-<html >
+<html>
     <head>        
-        <!--<script src="../src/OneRom.js" type="text/javascript"></script>-->
+        
+        
         <script src="../src/OneRom.js" type="text/javascript"></script>
+        <style>
+            .inputfile {
+                width: 0.1px!important;
+                height: 0.1px!important;
+                opacity: 0;
+                overflow: hidden;
+                position: absolute;
+                /* z-index: -1000; */
+            }
+            
+            .btn{
+                cursor: pointer;
+                padding: 4px 10px 4px;
+                display: inline-block;
+            }
+        </style>
+        <meta charset="utf-8">
     </head>
+    
     <body>
         <br>
         <br>
@@ -11,7 +29,7 @@
         <label>
             Nombre
         </label>
-        <input type="text" x-value="Nombre" />
+        <input type="text" x-value="Nombre"  />
         <hr>
         <br>
         <label>
@@ -28,23 +46,61 @@
             <option value="M">Mujer</option>
         </select>
 
+        <br>
+        <input type="file" multiple="" id="Foto" class="inputfile" name="Foto" data-multiple-caption="{count} archivos seleccionados" x-value="Foto">
+        <label for="Foto" class="btn">            
+            <span>Subir Archivo</span>
+        </label>
 
         <hr>
         <br>
         <input type="button" value="Mostrar Valores" onclick="MostrarValores();"/>
-        
-        
+
+
 
         <script>
-            Debug = true;
+            Debug = false;
 
             function MostrarValores() {
-                alert("Tu nombre es: "+Door.Nombre);
-                
-                alert("Tus apellidos son:"+Door.Apellidos)
-                var Genero = Door.Sexo=="H"?"Hombre":"Mujer";
-                alert("Tu genero es: "+Genero);
-                
+                alert("Tu nombre es: " + Door.Nombre);
+
+                alert("Tus apellidos son:" + Door.Apellidos)
+                var Genero = Door.Sexo == "H" ? "Hombre" : "Mujer";
+                alert("Tu genero es: " + Genero);
+
+            }
+
+
+            ReadyRom("[type=file]", function () {
+                this.changeFile = new ChangeFile(this);
+                this.addEventListener("change", function () {
+
+                    this.changeFile.run(this);
+
+                });
+
+            });
+
+
+            
+            function ChangeFile(element) {
+                var label = element.nextElementSibling,
+                        labelVal = label.innerHTML;
+
+                this.run = function (e)
+                {
+                    var fileName = '';
+                    if (e.files && e.files.length > 1)
+                        fileName = (e.getAttribute('data-multiple-caption') || '').replace('{count}', e.files.length);
+                    else
+                        fileName = e.value.split('\\').pop();
+
+                    if (fileName)
+                        label.querySelector('span').innerHTML = fileName;
+                    else
+                        label.innerHTML = labelVal;
+                };
+
             }
         </script>
 
