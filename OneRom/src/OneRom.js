@@ -3,19 +3,18 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 17 febrero 2020
+// Last Update  : 2 mayo 2020
 // ============================================================+
 
 
 //------------------------Navegacion Ajax ---------------------------------
 window.onpopstate = function (event) {
     window.NavigationState = true;
-    Door = event.state.Dom;
-    sessionStorage.setItem("Dom", JSON.stringify(Door));
+    Door = event.state.Door;
+    sessionStorage.setItem("Door", JSON.stringify(Door));
     var ParametrosUrl = new URLSearchParams(location.search);
     var Argum = [];
     var ArgumCheck = [];
-
     for (var key of ParametrosUrl.keys()) {
         if (key != "F" && key != "_f" && key != "M" && !ArgumCheck.includes(key)) {
             ArgumCheck.push(key);
@@ -24,24 +23,20 @@ window.onpopstate = function (event) {
                 Argum.push(parametro);
             else
                 Argum.push(parametro[0]);
-
         }
     }
 
     window[event.state.Metodo].apply(null, Argum);
     Restart();
 };
-
 function ActivaNavegacionAjax(PaginaInicio) {
     if (window.NavigationState == undefined) {
         window.NavigationState = false;
     }
     var ParametrosUrl = new URLSearchParams(location.search);
     var Metodo = ParametrosUrl.get("M");
-
     var Argum = [];
     var ArgumCheck = [];
-
     for (var key of ParametrosUrl.keys()) {
         if (key != "F" && key != "_f" && key != "M" && !ArgumCheck.includes(key)) {
             ArgumCheck.push(key);
@@ -50,12 +45,11 @@ function ActivaNavegacionAjax(PaginaInicio) {
                 Argum.push(parametro);
             else
                 Argum.push(parametro[0]);
-
         }
     }
 
     if (Metodo) {
-        Door = JSON.parse(sessionStorage.getItem("Dom"));
+        Door = JSON.parse(sessionStorage.getItem("Door"));
         NavigationState = true;
         window[Metodo].apply(null, Argum);
     } else {
@@ -64,15 +58,15 @@ function ActivaNavegacionAjax(PaginaInicio) {
     Restart();
 }
 
-function CargarPaginaNavegacionAjax(Dom, ParamUrl, EsInicio = false) {
-    sessionStorage.setItem("Dom", JSON.stringify(Dom));
+function CargarPaginaNavegacionAjax(Door, ParamUrl, EsInicio = false) {
+    sessionStorage.setItem("Door", JSON.stringify(Door));
     var ParametrosUrl = new URLSearchParams(ParamUrl);
     var Metodo = ParametrosUrl.get("M");
     if (!NavigationState) {
         if (EsInicio) {
-            history.replaceState({"Dom": Dom, "Metodo": Metodo}, "Pagina" + Metodo, ParamUrl);
+            history.replaceState({"Door": Door, "Metodo": Metodo}, "Pagina" + Metodo, ParamUrl);
         } else {
-            history.pushState({"Dom": Dom, "Metodo": Metodo}, "Pagina" + Metodo, ParamUrl);
+            history.pushState({"Door": Door, "Metodo": Metodo}, "Pagina" + Metodo, ParamUrl);
         }
     }
     NavigationState = false;
@@ -98,13 +92,11 @@ AjaxFailServidor = function (event) {
         console.log(event);
     }
 };
-
 AjaxStartServidor = function () {
     if (Debug) {
         console.log("Inicia POST/GET");
     }
 };
-
 AjaxFinallyServidor = function () {
     if (Debug) {
         console.log("Finaliso POST/GET");
@@ -193,12 +185,8 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
             console.log("se cancelo la tranferencia de informacion.");
         }
     };
-
-
     var Request = new XMLHttpRequest();
-
     Request.open(Metod.toUpperCase(), Url, true);
-
     /**
      * Send
      * POST/GET a la url introducida
@@ -206,12 +194,10 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
     this.Send = function () {
 
         AjaxStartServidor();
-
         Request.addEventListener("progress", this.UpdateProgress, false);
         Request.addEventListener("load", this.TransferComplete, false);
         Request.addEventListener("error", this.TransferFailed, false);
         Request.addEventListener("abort", this.TransferCanceled, false);
-
         if (Data != null) {
             Request.send(Data);
         } else {
@@ -224,7 +210,6 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
                 if (Request.status == 200) {
 
                     var result = null;
-
                     try {
                         result = JSON.parse(Request.response);
                         Success(result);
@@ -239,7 +224,6 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
 
                     }
                     AjaxFinallyServidor();
-
                 } else {
                     AjaxFailServidor("Fallo el servidor intente mas tarde");
                     AjaxFinallyServidor();
@@ -255,18 +239,15 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
 
 
     };
-
 }
 
 //----------------------Hilo verificador de elementos nuevos---------------
 (function (win) {
     'use strict';
-
     var listeners = [],
             doc = win.document,
             MutationObserver = win.MutationObserver || win.WebKitMutationObserver,
             observer;
-
     function ReadyRom(selector, fn) {
         // Store the selector and callback to be monitored
         listeners.push({
@@ -281,12 +262,12 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
                 subtree: true
             });
         }
-        // Check if the element is currently in the DOM
+        // Check if the element is currently in the Door
         check();
     }
 
     function check() {
-        // Check the DOM for elements matching a stored selector
+// Check the Door for elements matching a stored selector
         for (var i = 0, len = listeners.length, listener, elements; i < len; i++) {
             listener = listeners[i];
             // Query for elements matching the specified selector
@@ -308,23 +289,17 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
         }
     }
 
-    // Expose `ready`
+// Expose `ready`
     win.ReadyRom = ReadyRom;
-
 })(this);
-
 //------------------------heart core---------------------------------------
 var Door = {};
-
 var Debug = false;
 var SingleGetControls = false;
 var MultiGetControls = false;
-
 function Restart() {
 
     var Controles = document.querySelectorAll("[x-value]");
-
-
     for (let item of Controles) {
 
         if (item.ready !== undefined) {
@@ -345,7 +320,6 @@ function Restart() {
             }
             return false;
         };
-
         toObject(Door, item.getAttribute("x-value"), item.value);
         if (Debug) {
             console.log(Door);
@@ -363,7 +337,6 @@ ReadyRom("[x-value]", function () {
     this.onchange = null;
     this.onchange = function () {
         toObject(Door, this.getAttribute("x-value"), this.value);
-
         if (Debug) {
             console.log(Door);
         }
@@ -374,13 +347,11 @@ ReadyRom("[x-value]", function () {
         }
         return false;
     };
-
     toObject(Door, this.getAttribute("x-value"), this.value);
     if (Debug) {
         console.log(Door);
     }
 });
-
 function toObject(objeto, propiedad, valor, nombreControl = "") {
 
     key = "";
@@ -392,18 +363,25 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
         if (!nombreControl || nombreControl == undefined || nombreControl == "" || nombreControl.length == 0) {
             return true;
         }
-        var Control = document.querySelector("[x-value='" + nombreControl + "']");
-
-        if (Control.type == "file") {
-            return Control.files;
+        var Controles = document.querySelectorAll("[x-value='" + nombreControl + "']");
+        if (Controles[0].type == "file") {
+            return Controles[0].files;
         }
-        if (Control.type == "checkbox") {
-            return Control.checked;
+        if (Controles[0].type == "radio") {            
+            for (var Control of Controles) {
+                if (Control.checked) {
+                    return Control.value;
+                }
+            }
+            
         }
-        if (Control.localName == "select" && Control.multiple) {
+        if (Controles[0].type == "checkbox") {
+            return Controles[0].checked;
+        }
+        if (Controles[0].localName == "select" && Controles[0].multiple) {
 
             var Select = [];
-            for (var opcion of Control.selectedOptions) {
+            for (var opcion of Controles[0].selectedOptions) {
                 Select.push(opcion.value);
             }
             return Select;
@@ -454,28 +432,33 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
                     },
                     set: function (value) {
                         _PropiedadPrivada = value;
-
-                        var Control = document.querySelector("[x-value='" + nombreControl + "']");
-
-                        _PropiedadPrivada1 = Control;
-
-                        if (Control == null) {
+                        var Controles = document.querySelectorAll("[x-value='" + nombreControl + "']");
+                        _PropiedadPrivada1 = Controles;
+                        if (Controles.length == 0) {
                             if (Debug) {
                                 console.error("Control " + nombreControl + " no existe o fue eliminado");
                             }
-                        } else if (Control.localName == "select" && Control.multiple) {
+                        } else if (Controles[0].localName == "select" && Controles[0].multiple) {
 
                             if (Array.isArray(value)) {
-                                for (var i = 0; i < Control.options.length; i++) {
-                                    Control.options[i].selected = value.indexOf(Control.options[i].value) >= 0;
+                                for (var i = 0; i < Controles[0].options.length; i++) {
+                                    Controles[0].options[i].selected = value.indexOf(Controles[0].options[i].value) >= 0;
                                 }
                             } else if (value != "") {
-                                Control.value = value;
+                                Controles[0].value = value;
                             }
 
 
-                        } else if (Control.type != "file") {
-                            Control.value = value;
+                        } else if (Controles[0].type == "radio") {
+                            for (let Control of Controles) {
+                                if (Control==value) {
+                                    Control.checked=true;
+                                }
+                                
+//                                Control.value=value;
+                            }
+                        } else if (Controles[0].type != "file") {
+                            Controles[0].value = value;
                         }
 
 
