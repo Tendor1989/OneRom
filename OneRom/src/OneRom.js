@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 2 mayo 2020
+// Last Update  : 28 12 2020
 // ============================================================+
 
 
@@ -212,17 +212,18 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
                     var result = null;
                     try {
                         result = JSON.parse(Request.response);
+
+                    } catch (e) {
+                        AjaxFailServidor(Request.response);
+                        result = Request.response;
+                    }
+                    try {
                         Success(result);
                     } catch (e) {
-                        if (!e.message.includes("JSON.parse")) {
-                            AjaxFailServidor(e.message);
-                        } else if (!RetrivalJson) {
-                            Success(Request.response);
-                        } else {
-                            AjaxFailServidor(Request.response);
-                        }
-
+                        AjaxFailServidor(e.message);
                     }
+
+
                     AjaxFinallyServidor();
                 } else {
                     AjaxFailServidor("Fallo el servidor intente mas tarde");
@@ -305,6 +306,10 @@ function Restart() {
         if (item.ready !== undefined) {
             continue;
         }
+        
+        if (item.Leido) {
+            continue;
+        }
 
         item.change = item.onchange;
         item.onchange = null;
@@ -321,6 +326,7 @@ function Restart() {
             return false;
         };
         toObject(Door, item.getAttribute("x-value"), item.value);
+        item.Leido=true;
         if (Debug) {
             console.log(Door);
         }
@@ -348,6 +354,7 @@ ReadyRom("[x-value]", function () {
         return false;
     };
     toObject(Door, this.getAttribute("x-value"), this.value);
+    this.Leido=true;
     if (Debug) {
         console.log(Door);
     }
@@ -367,13 +374,13 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
         if (Controles[0].type == "file") {
             return Controles[0].files;
         }
-        if (Controles[0].type == "radio") {            
+        if (Controles[0].type == "radio") {
             for (var Control of Controles) {
                 if (Control.checked) {
                     return Control.value;
                 }
             }
-            
+
         }
         if (Controles[0].type == "checkbox") {
             return Controles[0].checked;
@@ -433,7 +440,12 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
                     set: function (value) {
                         _PropiedadPrivada = value;
                         var Controles = document.querySelectorAll("[x-value='" + nombreControl + "']");
-                        _PropiedadPrivada1 = Controles;
+                        if (Controles.length > 1) {
+                            _PropiedadPrivada1 = Controles;
+                        } else {
+                            _PropiedadPrivada1 = Controles[0];
+                        }
+
                         if (Controles.length == 0) {
                             if (Debug) {
                                 console.error("Control " + nombreControl + " no existe o fue eliminado");
@@ -451,10 +463,10 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
 
                         } else if (Controles[0].type == "radio") {
                             for (let Control of Controles) {
-                                if (Control==value) {
-                                    Control.checked=true;
+                                if (Control.value == value) {
+                                    Control.checked = true;
                                 }
-                                
+
 //                                Control.value=value;
                             }
                         } else if (Controles[0].type != "file") {
