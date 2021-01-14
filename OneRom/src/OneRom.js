@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 28 12 2020
+// Last Update  : 14 01 2021
 // ============================================================+
 
 
@@ -34,7 +34,7 @@ function ActivaNavegacionAjax(PaginaInicio) {
         window.NavigationState = false;
     }
     var ParametrosUrl = new URLSearchParams(location.search);
-    var Metodo = ParametrosUrl.get("M");
+    var Metodo = ParametrosUrl.get("M");    
     var Argum = [];
     var ArgumCheck = [];
     for (var key of ParametrosUrl.keys()) {
@@ -48,7 +48,7 @@ function ActivaNavegacionAjax(PaginaInicio) {
         }
     }
 
-    if (Metodo) {
+    if (Metodo!=PaginaInicio && Metodo!=null) {
         Door = JSON.parse(sessionStorage.getItem("Door"));
         NavigationState = true;
         window[Metodo].apply(null, Argum);
