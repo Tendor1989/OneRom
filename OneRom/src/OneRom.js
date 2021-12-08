@@ -34,7 +34,7 @@ function ActivaNavegacionAjax(PaginaInicio) {
         window.NavigationState = false;
     }
     var ParametrosUrl = new URLSearchParams(location.search);
-    var Metodo = ParametrosUrl.get("M");    
+    var Metodo = ParametrosUrl.get("M");
     var Argum = [];
     var ArgumCheck = [];
     for (var key of ParametrosUrl.keys()) {
@@ -48,7 +48,7 @@ function ActivaNavegacionAjax(PaginaInicio) {
         }
     }
 
-    if (Metodo!=PaginaInicio && Metodo!=null) {
+    if (Metodo != PaginaInicio && Metodo != null) {
         Door = JSON.parse(sessionStorage.getItem("Door"));
         NavigationState = true;
         window[Metodo].apply(null, Argum);
@@ -306,7 +306,7 @@ function Restart() {
         if (item.ready !== undefined) {
             continue;
         }
-        
+
         if (item.Leido) {
             continue;
         }
@@ -326,7 +326,7 @@ function Restart() {
             return false;
         };
         toObject(Door, item.getAttribute("x-value"), item.value);
-        item.Leido=true;
+        item.Leido = true;
         if (Debug) {
             console.log(Door);
         }
@@ -354,7 +354,7 @@ ReadyRom("[x-value]", function () {
         return false;
     };
     toObject(Door, this.getAttribute("x-value"), this.value);
-    this.Leido=true;
+    this.Leido = true;
     if (Debug) {
         console.log(Door);
     }
@@ -502,8 +502,10 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
 //---------------------------Helpers------------------------------
 function HInput(name, value, objectsHtml = {}) {
 
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     var InputText = new Container("", "input", objectsHtml);
@@ -514,8 +516,10 @@ function HInput(name, value, objectsHtml = {}) {
 
 function HTextArea(name, value, objectsHtml = {}) {
 
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     var InputTextArea = new Container(value, "textarea", objectsHtml);
@@ -526,8 +530,10 @@ function HTextArea(name, value, objectsHtml = {}) {
 
 function HNumeric(name, value, objectsHtml = {}) {
 
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     objectsHtml.type = "number";
@@ -539,9 +545,10 @@ function HNumeric(name, value, objectsHtml = {}) {
 }
 
 function HLink(name, value, objectsHtml = {}) {
-
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     if (objectsHtml.style == undefined) {
         objectsHtml.style = 'cursor: pointer;';
@@ -557,9 +564,10 @@ function HLink(name, value, objectsHtml = {}) {
 }
 
 function HComboBox(name, value, arrayCombox, objectsHtml = {}) {
-
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     var ComboBox = new Container("", "select", objectsHtml);
@@ -584,9 +592,10 @@ function HComboBox(name, value, arrayCombox, objectsHtml = {}) {
 }
 
 function HCalendar(name, value, objectsHtml = {}) {
-
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     objectsHtml.type = "date";
@@ -597,9 +606,10 @@ function HCalendar(name, value, objectsHtml = {}) {
 }
 
 function HHours(name, value, objectsHtml = {}) {
-
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     objectsHtml.type = "time";
@@ -610,9 +620,10 @@ function HHours(name, value, objectsHtml = {}) {
 }
 
 function HButton(name, value, objectsHtml = {}, type = "button") {
-
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.type = type;
     var InputButton = new Container(value, "button", objectsHtml);
@@ -622,9 +633,10 @@ function HButton(name, value, objectsHtml = {}, type = "button") {
 }
 
 function HRadioButon(name, value, objectsHtml = {}) {
-
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     objectsHtml.type = "radio";
@@ -634,8 +646,10 @@ function HRadioButon(name, value, objectsHtml = {}) {
 }
 
 function HFile(name, objectsHtml = {}){
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml["x-value"] = name;
 
     objectsHtml.type = "file";
@@ -645,9 +659,10 @@ function HFile(name, objectsHtml = {}){
 }
 
 function HCheckBox(name, value, objectsHtml = {}) {
-
-    objectsHtml.id = name;
-    objectsHtml.name = name;
+    if (objectsHtml.id == undefined)
+        objectsHtml.id = name;
+    if (objectsHtml.name == undefined)
+        objectsHtml.name = name;
     objectsHtml.type = "checkbox";
     objectsHtml["x-value"] = name;
     if (value) {
@@ -709,5 +724,5 @@ function Container(Content, Type, objectsHtml = null) {
     }
     this.Html = function () {
         return WriteElement(this).outerHTML;
-    }
+}
 }
