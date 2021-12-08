@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 14 01 2021
+// Last Update  : 08 12 2021
 // ============================================================+
 
 
@@ -499,3 +499,215 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
 
 }
 
+//---------------------------Helpers------------------------------
+function HInput(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.value = value;
+    var InputText = new Container("", "input", objectsHtml);
+
+    return InputText;
+
+}
+
+function HTextArea(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.value = value;
+    var InputTextArea = new Container(value, "textarea", objectsHtml);
+
+    return InputTextArea;
+
+}
+
+function HNumeric(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.value = value;
+    objectsHtml.type = "number";
+
+    var InputNumeric = new Container("", "input", objectsHtml);
+
+    return InputNumeric;
+
+}
+
+function HLink(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    if (objectsHtml.style == undefined) {
+        objectsHtml.style = 'cursor: pointer;';
+    } else {
+        objectsHtml.style = 'cursor: pointer;' + objectsHtml.style;
+    }
+
+
+    var InputLink = new Container(value, "a", objectsHtml);
+
+    return InputLink;
+
+}
+
+function HComboBox(name, value, arrayCombox, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.value = value;
+    var ComboBox = new Container("", "select", objectsHtml);
+    ComboBox.Content = [];
+    for (var elemento in arrayCombox) {
+        if (Array.isArray(value)) {
+            if (value.includes(arrayCombox[elemento].Valor)) {
+                ComboBox.Content.push(new Container(arrayCombox[elemento].Texto, "option", {"selected": "", "value": arrayCombox[elemento].Valor}));
+            } else {
+                ComboBox.Content.push(new Container(arrayCombox[elemento].Texto, "option", {"value": arrayCombox[elemento].Valor}));
+            }
+        } else {
+            if (arrayCombox[elemento].Valor == value) {
+                ComboBox.Content.push(new Container(arrayCombox[elemento].Texto, "option", {"selected": "", "value": arrayCombox[elemento].Valor}));
+            } else {
+                ComboBox.Content.push(new Container(arrayCombox[elemento].Texto, "option", {"value": arrayCombox[elemento].Valor}));
+            }
+        }
+    }
+    return ComboBox;
+
+}
+
+function HCalendar(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.value = value;
+    objectsHtml.type = "date";
+    var InputCalendar = new Container("", "input", objectsHtml);
+
+    return InputCalendar;
+
+}
+
+function HHours(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.value = value;
+    objectsHtml.type = "time";
+    var InputHour = new Container("", "input", objectsHtml);
+
+    return InputHour;
+
+}
+
+function HButton(name, value, objectsHtml = {}, type = "button") {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.type = type;
+    var InputButton = new Container(value, "button", objectsHtml);
+
+    return InputButton;
+
+}
+
+function HRadioButon(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+    objectsHtml.value = value;
+    objectsHtml.type = "radio";
+    var InputRadio = new Container("", "input", objectsHtml);
+
+    return InputRadio;
+}
+
+function HFile(name, objectsHtml = {}){
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+
+    objectsHtml.type = "file";
+    var InputFile = new Container("", "input", objectsHtml);
+
+    return InputFile;
+}
+
+function HCheckBox(name, value, objectsHtml = {}) {
+
+    objectsHtml.id = name;
+    objectsHtml.name = name;
+    objectsHtml.type = "checkbox";
+    objectsHtml["x-value"] = name;
+    if (value) {
+        objectsHtml.checked = "true";
+    }
+    var InputCheckBox = new Container("", "input", objectsHtml);
+
+    return InputCheckBox;
+
+}
+
+function WriteElement(container) {
+
+    if (container == null || container == undefined) {
+        return "";
+    }
+
+    var Elemento = null;
+    if (container.Type != "") {
+        Elemento = document.createElement(container.Type);
+    } else {
+        Elemento = document.createElement("div");
+
+    }
+
+    if (container.objectsHtml) {
+        Object.keys(container.objectsHtml).forEach(function (propiedad) {
+            Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
+        })
+    }
+
+    if (Array.isArray(container.Content)) {
+        for (var item in container.Content) {
+            if (typeof container.Content[item] !== 'object' && !Array.isArray(container.Content[item])) {
+                Elemento.innerHTML += container.Content[item];
+            } else {
+                Elemento.appendChild(WriteElement(container.Content[item]));
+            }
+        }
+    } else
+    {
+        if (typeof container.Content !== 'object' && !Array.isArray(container.Content)) {
+            Elemento.innerHTML = container.Content;
+        } else {
+            Elemento.appendChild(WriteElement(container.Content));
+        }
+    }
+
+    return Elemento;
+}
+
+function Container(Content, Type, objectsHtml = null) {
+    this.Content = Content;
+    this.Type = Type;
+    this.objectsHtml = objectsHtml;
+    this.Write = function (Element) {
+        var Contenedor = document.querySelector(Element);
+        Contenedor.appendChild(WriteElement(this));
+    }
+    this.Html = function () {
+        return WriteElement(this).outerHTML;
+    }
+}
