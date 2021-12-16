@@ -500,36 +500,64 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
 }
 
 //---------------------------Helpers------------------------------
-function HInput(name, value, objectsHtml = {}) {
+function HInput(name, value, title, required, objectsHtml = {}) {
 
+    var Id = name;      
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
         objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
-    var InputText = new Container("", "input", objectsHtml);
+    
+    var SimboloRequerido = required ? new Container("", "span", {"style":"display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
-    return InputText;
+
+    var Input = new Container("", "input", objectsHtml);
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(Input);
+    Div.Content.push(validacion);
+
+    return Div;
 
 }
 
-function HTextArea(name, value, objectsHtml = {}) {
+function HTextArea(name, value, title, required, objectsHtml = {}) {
 
+    var Id = name;
+    
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
         objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
-    var InputTextArea = new Container(value, "textarea", objectsHtml);
+    
+    var SimboloRequerido = required ? new Container("", "span", {"style":"display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
-    return InputTextArea;
+
+    var Area = new Container(value, "textarea", objectsHtml);
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(Area);
+    Div.Content.push(validacion);
+
+    return Div;
 
 }
 
-function HNumeric(name, value, objectsHtml = {}) {
+function HNumeric(name, value, title, required, objectsHtml = {}) {
 
+    var Id = name;
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
@@ -538,13 +566,24 @@ function HNumeric(name, value, objectsHtml = {}) {
     objectsHtml.value = value;
     objectsHtml.type = "number";
 
-    var InputNumeric = new Container("", "input", objectsHtml);
+    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
-    return InputNumeric;
+
+    var Numeric = new Container("", "input", objectsHtml);
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(Numeric);
+    Div.Content.push(validacion);
+
+    return Div;
 
 }
 
-function HLink(name, value, objectsHtml = {}) {
+function HLink(name, value, objectsHtml = {}, icon = "") {    
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
@@ -557,19 +596,28 @@ function HLink(name, value, objectsHtml = {}) {
     }
 
 
-    var InputLink = new Container(value, "a", objectsHtml);
+    var Link = new Container(value, "a", objectsHtml);
+    Link.Content = [];
+    Link.Content.push(new Container("", "span", {"class": icon}));
+    Link.Content.push(value);
 
-    return InputLink;
-
+    return Link;
 }
 
-function HComboBox(name, value, arrayCombox, objectsHtml = {}) {
+function HComboBox(name, value, title, required, arrayCombox, objectsHtml = {}) {
+    var Id = name;       
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
         objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
+    
+    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label", {"for": name});
+
     var ComboBox = new Container("", "select", objectsHtml);
     ComboBox.Content = [];
     for (var elemento in arrayCombox) {
@@ -587,25 +635,45 @@ function HComboBox(name, value, arrayCombox, objectsHtml = {}) {
             }
         }
     }
-    return ComboBox;
 
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(ComboBox);
+    Div.Content.push(validacion);
+    return Div;
 }
 
-function HCalendar(name, value, objectsHtml = {}) {
+function HCalendar(name, value, title, required, objectsHtml = {}) {
+
+    var Id = name;
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
         objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
-    objectsHtml.type = "date";
-    var InputCalendar = new Container("", "input", objectsHtml);
+    objectsHtml.type = "date";    
 
-    return InputCalendar;
+    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
+
+    var Calendar = new Container("", "input", objectsHtml);
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(Calendar);
+    Div.Content.push(validacion);
+
+    return Div;
 }
 
-function HHours(name, value, objectsHtml = {}) {
+function HHours(name, value, title, required, objectsHtml = {}) {
+
+    var Id = name;
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
@@ -613,39 +681,94 @@ function HHours(name, value, objectsHtml = {}) {
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     objectsHtml.type = "time";
-    var InputHour = new Container("", "input", objectsHtml);
 
-    return InputHour;
+    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label");
 
+
+    var Calendar = new Container("", "input", objectsHtml);
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(Calendar);
+    Div.Content.push(validacion);
+
+    return Div;
 }
 
-function HButton(name, value, objectsHtml = {}, type = "button") {
+function HButton(name, type, value, objectsHtml = {}, icon = "") {
+    
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
         objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.type = type;
-    var InputButton = new Container(value, "button", objectsHtml);
 
-    return InputButton;
+    var Button = new Container(value, "button", objectsHtml);
+    Button.Content = [];
+    Button.Content.push(new Container("", "span", {"class": icon}));
+    Button.Content.push(value);
+
+    return Button;
 
 }
 
-function HRadioButon(name, value, objectsHtml = {}) {
+function HRadioButon(name, value, title, required, arrayCombox, objectsHtml = {}) {
+    var Id = name;
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
-    if (objectsHtml.name == undefined)
-        objectsHtml.name = name;
-    objectsHtml["x-value"] = name;
-    objectsHtml.value = value;
-    objectsHtml.type = "radio";
-    var InputRadio = new Container("", "input", objectsHtml);
+    
+    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
-    return InputRadio;
+    var Input = new Container([], "div", {"style": "display: block ruby;"});
+
+    for (var item of arrayCombox) {
+        var DivRadio = new Container([], "div", {"style": "margin-right:5px"});
+        var ObjectsHtmlRadio = {};
+        ObjectsHtmlRadio = Object.assign({}, objectsHtml);
+        
+        ObjectsHtmlRadio.name = name;
+        ObjectsHtmlRadio["x-value"] = name;
+        ObjectsHtmlRadio.value = item.Valor;
+        ObjectsHtmlRadio.type = "radio";
+        
+
+        ObjectsHtmlRadio.id = ObjectsHtmlRadio.id + "Option" + arrayCombox.indexOf(item);
+        if (value == item.Valor) {
+            ObjectsHtmlRadio.checked = "";
+        }
+        var InputRadio = new Container("", "input", ObjectsHtmlRadio);
+        var LabelRadio = new Container(item.Texto, "label", {"class": "", "for": ObjectsHtmlRadio.id})
+        DivRadio.Content.push(InputRadio);
+        DivRadio.Content.push(LabelRadio);
+        Input.Content.push(DivRadio);
+//        ObjectsHtmlRadio = undefined;
+    }
+
+
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(Input);
+    Div.Content.push(validacion);
+
+    return Div;
 }
 
-function HFile(name, objectsHtml = {}){
+function HFile(name, title, required, objectsHtml = {}) {
+    var Id = name;
+
+    if (objectsHtml["class"] == undefined) {
+        objectsHtml["class"] = "inputfile";
+    } else {
+        objectsHtml["class"] = "inputfile" + " " + objectsHtml["class"];
+    }
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
@@ -653,12 +776,68 @@ function HFile(name, objectsHtml = {}){
     objectsHtml["x-value"] = name;
 
     objectsHtml.type = "file";
-    var InputFile = new Container("", "input", objectsHtml);
 
-    return InputFile;
+    objectsHtml["data-multiple-caption"] = "{count} archivos seleccionados";
+
+    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label");
+
+    objectsHtml["x-value"] = name;
+
+    if (objectsHtml.style == undefined) {
+        objectsHtml.style = "width: 0.1px!important;height: 0.1px!important;opacity: 0;overflow: hidden;position: absolute;";
+    } else {
+        objectsHtml.style += "width: 0.1px!important;height: 0.1px!important;opacity: 0;overflow: hidden;position: absolute;";
+    }
+
+    if (objectsHtml.onchange == undefined) {
+
+        objectsHtml.onchange = "HChangeFile(this);";
+    } else {
+        objectsHtml.onchange += "HChangeFile(this);";
+
+    }
+
+
+    var File =  new Container("", "input", objectsHtml);
+    var Boton = new Container('<div class="icon-file"> </div><span>Subir Archivo</span>', "label", {"for": Id, "class":objectsHtml.class});
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(File);
+    Div.Content.push(Boton);
+    Div.Content.push(validacion);
+
+
+
+
+
+    return Div;
+}
+function HChangeFile(element) {
+    var label = element.nextElementSibling,
+            labelVal = label.innerHTML;
+
+    var fileName = '';
+    if (element.files && element.files.length > 1)
+        fileName = (element.getAttribute('data-multiple-caption') || '').replace('{count}', element.files.length);
+    else
+        fileName = element.value.split('\\').pop();
+
+    if (fileName)
+        label.querySelector('span').innerHTML = fileName;
+    else
+        label.innerHTML = labelVal;
+
+
 }
 
-function HCheckBox(name, value, objectsHtml = {}) {
+function HCheckBox(name, value, title, required, objectsHtml = null) {
+
+    var Id = name;
+    
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
@@ -668,9 +847,24 @@ function HCheckBox(name, value, objectsHtml = {}) {
     if (value) {
         objectsHtml.checked = "true";
     }
-    var InputCheckBox = new Container("", "input", objectsHtml);
 
-    return InputCheckBox;
+    objectsHtml.name = name;
+    objectsHtml["x-value"] = name;
+
+    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var Div = new Container("", "");
+    var Label = new Container([title, SimboloRequerido], "label", {"for": name,"style":"margin-right:5px"});
+
+
+    var Input = new Container("", "input", objectsHtml);
+
+    Div.Content = [];
+    Div.Content.push(Label);
+    Div.Content.push(Input);
+    Div.Content.push(validacion);
+
+    return Div;
 
 }
 
@@ -679,7 +873,9 @@ function WriteElement(container) {
     if (container == null || container == undefined) {
         return "";
     }
-
+    if (typeof container !== 'object' && !Array.isArray(container)) {
+        return container;
+    }
     var Elemento = null;
     if (container.Type != "") {
         Elemento = document.createElement(container.Type);
@@ -696,22 +892,18 @@ function WriteElement(container) {
 
     if (Array.isArray(container.Content)) {
         for (var item in container.Content) {
-            if (typeof container.Content[item] !== 'object' && !Array.isArray(container.Content[item])) {
-                Elemento.innerHTML += container.Content[item];
-            } else {
-                Elemento.appendChild(WriteElement(container.Content[item]));
-            }
+            Elemento.innerHTML += WriteElement(container.Content[item]);
         }
     } else
     {
-        if (typeof container.Content !== 'object' && !Array.isArray(container.Content)) {
-            Elemento.innerHTML = container.Content;
-        } else {
-            Elemento.appendChild(WriteElement(container.Content));
-        }
+        Elemento.innerHTML = WriteElement(container.Content);
     }
-
-    return Elemento;
+    if (container.Type != "") {
+        return Elemento.outerHTML;
+    }
+    else{
+        return Elemento.innerHTML;
+    }
 }
 
 function Container(Content, Type, objectsHtml = null) {
@@ -720,9 +912,236 @@ function Container(Content, Type, objectsHtml = null) {
     this.objectsHtml = objectsHtml;
     this.Write = function (Element) {
         var Contenedor = document.querySelector(Element);
-        Contenedor.appendChild(WriteElement(this));
+        Contenedor.insertAdjacentHTML("beforeend",WriteElement(this));
     }
     this.Html = function () {
         return WriteElement(this).outerHTML;
 }
+}
+
+function Grid(objectsHtml = {}){    
+    this.Div=new Container("","div",objectsHtml);
+    this.Filas = []
+    this.Div.Content=this.Filas;
+    this.SetFila=function(objectsHtmlFila = {}){
+        
+        this.Filas.push(new Container([],"div",objectsHtmlFila));
+    }
+    this.SetCelda=function(FilaIndex,Contenido, objectsHtmlCelda = {}){
+        
+        this.Filas[FilaIndex].Content.push(new Container(Contenido,"div",objectsHtmlCelda));
+    }
+    this.Write = function (Element) {        
+        $(Element).append(WriteElement(this.Div));
+    }
+    this.Html = function () {
+
+        return WriteElement(this.Div);
+}
+    
+}
+
+//-----------------------Metodos utiles-----------------------------------------
+
+function HFocusControl(control) {
+    SingleGetControls = true;
+    var Control = Door[control];
+    if (Control.length != undefined) {
+        Control[0].focus();
+    } else {
+        Control.focus();
+    }
+}
+
+function HValidacionRequeridos(ClaseInput = "", ClassSpan = "") {
+    this.validacionesArray = [];
+    var Focus = true;
+    var Controles = document.querySelectorAll("[x-value]");
+
+    this.Validar = function () {
+
+        for (let Control of Controles) {
+
+            var Span = document.getElementById("Validation-" + Control.id);
+            if (ClaseInput != "")
+                Control.classList.remove(ClaseInput);
+            if (Span) {
+                Span.innerHTML = "";
+                if (ClassSpan != "")
+                    Span.classList.remove(ClassSpan);
+            }
+
+        }
+
+        for (let Validacion of this.validacionesArray) {
+            if (Focus) {
+                HFocusControl(Validacion[0]);
+                Focus = false;
+            }
+            SingleGetControls = true;
+            var Control = Door[Validacion[0]] //document.querySelector("[x-value='" + Validacion[0] + "']");
+            var Span = document.getElementById("Validation-" + Validacion[0]);
+            if (Control && ClaseInput != "") {
+                if (Control.length != undefined) {
+                    Control[0].classList.add(ClaseInput);
+                } else {
+                    Control.classList.add(ClaseInput);
+                }
+            }
+
+            if (Span) {
+                Span.innerHTML = Validacion[1];
+                if (ClassSpan != "")
+                    Span.classList.add(ClassSpan);
+            }
+
+        }
+    };
+
+}
+
+mensajeinfo = 0;
+
+mensaje3W = 0;
+
+Object.defineProperty(this, "mensajeinfo3W", {get: function () {
+        return mensajeinfo;
+    },
+    set: function (value) {
+        var XMensaje = document.getElementById("CerrarTodoMensaje3W");
+        if (value == 0) {
+            XMensaje.style.display = "none";
+        } else if (mensajeinfo == 0 && value == 1) {
+
+            XMensaje.style.display = "block";
+
+
+        }
+        mensajeinfo = value;
+    }
+})
+
+function QuitarMensaje(Target) {
+    var Alerta = document.querySelectorAll(Target);
+    if (Alerta.length == 0) {
+        return;
+    }
+    Alerta[0].style.opacity = 1;
+    var fadeEffect = setInterval(function () {
+        if (Alerta[0].style.opacity > 0) {
+            Alerta[0].style.opacity -= 0.1;
+        } else {
+            clearInterval(fadeEffect);
+            Alerta[0].remove();
+
+            var XMensajes = document.querySelectorAll(Target);
+            if (XMensajes.length > 0) {
+                QuitarMensaje(Target);
+            }
+        }
+    }, 50);
+}
+
+function NuevoMensaje(Target,index=0) {
+    var Alerta = document.querySelectorAll(Target);
+    if (Alerta.length == 0) {
+        return;
+    }
+    Alerta[index].style.opacity = 0;
+    var Opacity=0;
+    var fadeEffect = setInterval(function () {
+        if (Alerta[index].style.opacity < 1) {            
+            Alerta[index].style.opacity =Opacity;
+            Opacity+= 0.1;
+        } else {
+            clearInterval(fadeEffect);
+            var XMensajes = document.querySelectorAll(Target);
+            if (index+1<XMensajes.length) {
+                NuevoMensaje(Target,index+1);
+            }
+        }
+    }, 50);
+}
+
+function HAlerta(type, message, permanent = false) {
+
+
+    window.mensaje3W += 1;
+    var apuntador = window.mensaje3W;
+
+
+    var tipoAlerta = 'background-color:#d9edf7';
+    var icono = 'icon3W-info';
+
+    if (type == "error") {
+        var tipoAlerta = 'background-color:#f2dede';
+        var icono = 'icon3W-warning';
+    } else if (type == "success") {
+        var tipoAlerta = 'background-color:#dff0d8';
+        var icono = 'icon3W-checkmark2';
+
+    }
+
+
+    var XMensaje = document.getElementById("Alerta3W");
+    if (XMensaje == null) {
+        var div = new Container([], "div", {"id": "Alerta3W", "style": "position: fixed;right: 5px; top: 10px; z-index: 10000;text-align: center;max-height:75%;overflow-x: auto;"});
+        div.Content.push(new Container("x", "a", {"class": "", "id": "CerrarTodoMensaje3W", "style": "font-size: 50px;width: 55px;font-weight: 700;opacity: .5;display:none; background-color:red;color:white;border-radius:35px;padding-left:8px;padding-right:8px;padding-bottom:14px;position: absolute;right: 0;cursor: pointer;font-family: sans-serif;", "onclick": "QuitarMensaje('.alert'); window.mensajeinfo3W = 0;"}));
+        div.Content.push('<div style="height: 100px;"></div>');
+        div.Write("body");
+    }
+
+
+    window.mensajeinfo3W += 1;
+
+    
+    var mensaje = new Container([], "div", {"class": "alert", "id": "Mensaje3W" + apuntador, "style": "box-sizing: border-box;width: 100%;display: grid;padding-right: 30px;padding-top: 5px;padding-left: 20px;border-radius: 35px;border-top-right-radius: 0;"+tipoAlerta});
+
+
+
+    //mensaje.Content.push("<br>");
+    mensaje.Content.push(new Container('<span class="' +  icono + '"></span> <span>' + message + "<span>", "p", {"style": "font-size:30px;overflow-y: auto;margin-top: 30px;opacity: 0.5;margin-right: 50px;"}));
+    mensaje.Content.push(new Container("x", "a", {"style": "position: absolute;right: 5px;cursor: pointer;font-size: 60px;font-weight: 700;opacity: .5;box-sizing: border-box;font-family: sans-serif;", "class": "", "onclick": "window.mensajeinfo3W -= 1;QuitarMensaje('#Mensaje3W"+apuntador+"');"}));
+    //mensaje.Content.push("<br>");
+
+    mensaje.Write("#Alerta3W");
+
+    
+    
+    NuevoMensaje("#Mensaje3W" + apuntador);
+
+    if (permanent) {
+        return;
+    }
+    window.setTimeout(function () {
+        if (document.getElementById("Mensaje3W" + apuntador) != null) {
+            window.mensajeinfo3W -= 1;
+        }
+        QuitarMensaje("#Mensaje3W" + apuntador);        
+
+    }, 6000);
+    
+}
+
+String.prototype.replaceAll = function (search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+}
+
+Date.prototype.toString = function (Format = "yyyy/mm/dd") {
+
+    var date = new Date(this.valueOf());
+
+    var dia = date.getDate();
+    var mes = date.getMonth() + 1;
+    var anio = date.getFullYear();
+
+    mes = mes < 10 ? "0" + mes : mes;
+    dia = dia < 10 ? "0" + dia : dia;
+
+    var Fecha = Format.replaceAll("yyyy", anio);
+    Fecha = Fecha.replaceAll("mm", mes);
+    Fecha = Fecha.replaceAll("dd", dia);
+
+    return Fecha;
 }
