@@ -932,11 +932,11 @@ function Grid(objectsHtml = {}){
         this.Filas[FilaIndex].Content.push(new Container(Contenido,"div",objectsHtmlCelda));
     }
     this.Write = function (Element) {        
-        $(Element).append(WriteElement(this.Div));
+        this.Div.Write(Element);
     }
     this.Html = function () {
 
-        return WriteElement(this.Div);
+        return this.Div.Html();
 }
     
 }
