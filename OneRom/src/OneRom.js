@@ -509,7 +509,7 @@ function HInput(name, value, title, required, objectsHtml = {}) {
         objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -538,7 +538,7 @@ function HTextArea(name, value, title, required, objectsHtml = {}) {
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -567,7 +567,7 @@ function HNumeric(name, value, title, required, objectsHtml = {}) {
     objectsHtml.value = value;
     objectsHtml.type = "number";
 
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -615,7 +615,7 @@ function HComboBox(name, value, title, required, arrayCombox, objectsHtml = {}) 
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -658,7 +658,7 @@ function HCalendar(name, value, title, required, objectsHtml = {}) {
     objectsHtml.value = value;
     objectsHtml.type = "date";    
 
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -686,7 +686,7 @@ function HHours(name, value, title, required, objectsHtml = {}) {
     objectsHtml.value = value;
     objectsHtml.type = "time";
 
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -725,7 +725,7 @@ function HRadioButon(name, value, title, required, arrayCombox, objectsHtml = {}
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -784,7 +784,7 @@ function HFile(name, title, required, objectsHtml = {}) {
 
     objectsHtml["data-multiple-caption"] = "{count} archivos seleccionados";
 
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
@@ -857,7 +857,7 @@ function HCheckBox(name, value, title, required, objectsHtml = null) {
     objectsHtml.name = name;
     objectsHtml["x-value"] = name;
 
-    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
