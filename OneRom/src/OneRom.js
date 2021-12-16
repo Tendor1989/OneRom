@@ -703,8 +703,7 @@ function HButton(name, type, value, objectsHtml = {}, icon = "") {
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
-        objectsHtml.name = name;
-    objectsHtml["x-value"] = name;
+        objectsHtml.name = name;    
     objectsHtml.type = type;
 
     var Button = new Container(value, "button", objectsHtml);
