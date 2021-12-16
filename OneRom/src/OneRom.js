@@ -509,8 +509,8 @@ function HInput(name, value, title, required, objectsHtml = {}) {
         objectsHtml.name = name;
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
-    
-    var SimboloRequerido = required ? new Container("", "span", {"style":"display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
@@ -538,7 +538,8 @@ function HTextArea(name, value, title, required, objectsHtml = {}) {
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     
-    var SimboloRequerido = required ? new Container("", "span", {"style":"display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
@@ -566,7 +567,8 @@ function HNumeric(name, value, title, required, objectsHtml = {}) {
     objectsHtml.value = value;
     objectsHtml.type = "number";
 
-    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
@@ -613,7 +615,8 @@ function HComboBox(name, value, title, required, arrayCombox, objectsHtml = {}) 
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     
-    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
@@ -655,7 +658,8 @@ function HCalendar(name, value, title, required, objectsHtml = {}) {
     objectsHtml.value = value;
     objectsHtml.type = "date";    
 
-    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
@@ -682,7 +686,8 @@ function HHours(name, value, title, required, objectsHtml = {}) {
     objectsHtml.value = value;
     objectsHtml.type = "time";
 
-    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label");
@@ -720,7 +725,8 @@ function HRadioButon(name, value, title, required, arrayCombox, objectsHtml = {}
     if (objectsHtml.id == undefined)
         objectsHtml.id = name;
     
-    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
@@ -778,7 +784,8 @@ function HFile(name, title, required, objectsHtml = {}) {
 
     objectsHtml["data-multiple-caption"] = "{count} archivos seleccionados";
 
-    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label");
@@ -850,7 +857,8 @@ function HCheckBox(name, value, title, required, objectsHtml = null) {
     objectsHtml.name = name;
     objectsHtml["x-value"] = name;
 
-    var SimboloRequerido = required ? new Container("", "span", {"style": "display: block;width: 100%;border: solid 1px #9acd32;"}) : "";
+    var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"";
+    var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
     var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name,"style":"margin-right:5px"});
