@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 08 12 2021
+// Last Update  : 17 12 2021
 // ============================================================+
 
 
@@ -511,7 +511,7 @@ function HInput(name, value, title, required, objectsHtml = {}) {
     objectsHtml.value = value;
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
@@ -540,7 +540,7 @@ function HTextArea(name, value, title, required, objectsHtml = {}) {
     
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
@@ -569,7 +569,7 @@ function HNumeric(name, value, title, required, objectsHtml = {}) {
 
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
@@ -617,7 +617,7 @@ function HComboBox(name, value, title, required, arrayCombox, objectsHtml = {}) 
     
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
@@ -660,7 +660,7 @@ function HCalendar(name, value, title, required, objectsHtml = {}) {
 
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
@@ -688,7 +688,7 @@ function HHours(name, value, title, required, objectsHtml = {}) {
 
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label");
 
@@ -727,7 +727,7 @@ function HRadioButon(name, value, title, required, arrayCombox, objectsHtml = {}
     
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
@@ -786,7 +786,7 @@ function HFile(name, title, required, objectsHtml = {}) {
 
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label");
 
@@ -859,7 +859,7 @@ function HCheckBox(name, value, title, required, objectsHtml = null) {
 
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
     var SimboloRequerido = new Container("", "span", {"style":CssRequerido});
-    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id}) : "";
+    var validacion = required ? new Container("", "span", {"id": "Validation-" + Id,"style":"color:#c09853"}) : "";
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name,"style":"margin-right:5px"});
 
@@ -961,6 +961,8 @@ function HFocusControl(control) {
 }
 
 function HValidacionRequeridos(ClaseInput = "", ClassSpan = "") {
+    var ArrayClaseInput = ClaseInput.split(" ");
+    var ArrayClassSpan = ClassSpan.split(" ");
     this.validacionesArray = [];
     var Focus = true;
     var Controles = document.querySelectorAll("[x-value]");
@@ -970,12 +972,17 @@ function HValidacionRequeridos(ClaseInput = "", ClassSpan = "") {
         for (let Control of Controles) {
 
             var Span = document.getElementById("Validation-" + Control.id);
-            if (ClaseInput != "")
-                Control.classList.remove(ClaseInput);
+            for (var Clase of ArrayClaseInput) {
+                if (Clase != "")
+                    Control.classList.remove(Clase);
+            }
             if (Span) {
                 Span.innerHTML = "";
-                if (ClassSpan != "")
-                    Span.classList.remove(ClassSpan);
+
+                for (var Clase of ArrayClassSpan) {
+                    if (Clase != "")
+                        Span.classList.remove(Clase);
+                }
             }
 
         }
@@ -990,16 +997,26 @@ function HValidacionRequeridos(ClaseInput = "", ClassSpan = "") {
             var Span = document.getElementById("Validation-" + Validacion[0]);
             if (Control && ClaseInput != "") {
                 if (Control.length != undefined) {
-                    Control[0].classList.add(ClaseInput);
+                    for (var Clase of ArrayClaseInput) {
+                        if (Clase != "")
+                            Control[0].classList.add(Clase);
+                    }
                 } else {
-                    Control.classList.add(ClaseInput);
+                    for (var Clase of ArrayClaseInput) {
+                        if (Clase != "")
+                            Control.classList.add(Clase);
+                    }
+
                 }
             }
 
             if (Span) {
                 Span.innerHTML = Validacion[1];
-                if (ClassSpan != "")
-                    Span.classList.add(ClassSpan);
+                for (var Clase of ArrayClassSpan) {
+                    if (Clase != "")
+                        Span.classList.add(Clase);
+                }
+
             }
 
         }
