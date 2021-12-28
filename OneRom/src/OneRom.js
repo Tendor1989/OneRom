@@ -1208,3 +1208,20 @@ Date.prototype.toString = function (Format = "yyyy/mm/dd") {
 
     return Fecha;
 }
+
+FormData.prototype.add=function(Nombre,Objeto,ArregloPropiedadesQuitar=[]){    
+  this.QuitarPropiedadesBasura = function (key, value)
+  {
+      var ParametrosNotAcepted = ArregloPropiedadesQuitar;
+      var ElementoFiltro = ParametrosNotAcepted.find(Elemento => Elemento == key);
+      if (ElementoFiltro == undefined)
+          return value;
+      else
+          return undefined;
+  };
+  if(typeof Objeto === 'object'){
+    this.append(Nombre,JSON.stringify(Objeto,this.QuitarPropiedadesBasura));    
+    return;
+  }
+  this.append(Nombre,Objeto);
+};
