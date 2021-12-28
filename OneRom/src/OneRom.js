@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 17 12 2021
+// Last Update  : 28 12 2021
 // ============================================================+
 
 
@@ -507,6 +507,7 @@ function HInput(name, value, title, required, objectsHtml = {}) {
         objectsHtml.id = name;
     if (objectsHtml.name == undefined)
         objectsHtml.name = name;
+    objectsHtml.type="text";
     objectsHtml["x-value"] = name;
     objectsHtml.value = value;
     var CssRequerido=required ? "display: block;width: 100%;border: solid 1px #9acd32;":"display: block;";
@@ -872,6 +873,44 @@ function HCheckBox(name, value, title, required, objectsHtml = null) {
     Div.Content.push(validacion);
 
     return Div;
+
+}
+
+function HTabla(objectsHtml = {},ObjectsHtmlHeader={},ObjectsHtmlBody={}){
+    this.DivTabla = new Container([], "table", objectsHtml);
+    this.Header = new Container([],"thead",ObjectsHtmlHeader);
+    this.Body = new Container([],"tbody",ObjectsHtmlBody);
+    this.Encabesados = [];
+    this.Filas = [];
+    this.Header.Content = this.Encabesados;
+    this.Body.Content = this.Filas;
+    this.DivTabla.Content.push(this.Header);
+    this.DivTabla.Content.push(this.Body);
+    this.SetFilaHeader = function (objectsHtmlEncabezado = {}){
+
+        this.Encabesados.push(new Container([], "tr", objectsHtmlEncabezado));
+    }
+    this.SetCeldaHeader = function (FilaIndex, Contenido, objectsHtmlCelda = {}){
+
+        this.Encabesados[FilaIndex].Content.push(new Container(Contenido, "th", objectsHtmlCelda));
+    }
+    this.SetFila = function (objectsHtmlEncabezado = {}){
+
+        this.Filas.push(new Container([], "tr", objectsHtmlEncabezado));
+    }
+    this.SetCelda = function (FilaIndex, Contenido, objectsHtmlCelda = {}){
+
+        this.Filas[FilaIndex].Content.push(new Container(Contenido, "th", objectsHtmlCelda));
+    }
+    
+    
+    this.Write = function (Element) {
+        this.DivTabla.Write(Element);
+    }
+    this.Html = function () {
+
+        return this.DivTabla.Html();
+}
 
 }
 
