@@ -1063,24 +1063,24 @@ function HValidacionRequeridos(ClaseInput = "", ClassSpan = "") {
 
 }
 
-mensajeinfo = 0;
+Hmensajeinfo = 0;
 
 mensaje3W = 0;
 
-Object.defineProperty(this, "mensajeinfo3W", {get: function () {
-        return mensajeinfo;
+Object.defineProperty(this, "Hmensajeinfo3W", {get: function () {
+        return Hmensajeinfo;
     },
     set: function (value) {
         var XMensaje = document.getElementById("CerrarTodoMensaje3W");
         if (value == 0) {
             XMensaje.style.display = "none";
-        } else if (mensajeinfo == 0 && value == 1) {
+        } else if (Hmensajeinfo == 0 && value == 1) {
 
             XMensaje.style.display = "block";
 
 
         }
-        mensajeinfo = value;
+        Hmensajeinfo = value;
     }
 })
 
@@ -1149,13 +1149,13 @@ function HAlerta(type, message, permanent = false) {
     var XMensaje = document.getElementById("Alerta3W");
     if (XMensaje == null) {
         var div = new Container([], "div", {"id": "Alerta3W", "style": "position: fixed;right: 5px; top: 10px; z-index: 10000;text-align: center;max-height:75%;overflow-x: auto;"});
-        div.Content.push(new Container("x", "a", {"class": "", "id": "CerrarTodoMensaje3W", "style": "font-size: 50px;width: 55px;font-weight: 700;opacity: .5;display:none; background-color:red;color:white;border-radius:35px;padding-left:8px;padding-right:8px;padding-bottom:14px;position: absolute;right: 0;cursor: pointer;font-family: sans-serif;", "onclick": "QuitarMensaje('.alert'); window.mensajeinfo3W = 0;"}));
+        div.Content.push(new Container("x", "a", {"class": "", "id": "CerrarTodoMensaje3W", "style": "font-size: 50px;width: 55px;font-weight: 700;opacity: .5;display:none; background-color:red;color:white;border-radius:35px;padding-left:8px;padding-right:8px;padding-bottom:14px;position: absolute;right: 0;cursor: pointer;font-family: sans-serif;", "onclick": "QuitarMensaje('.alert'); window.Hmensajeinfo3W = 0;"}));
         div.Content.push('<div style="height: 100px;"></div>');
         div.Write("body");
     }
 
 
-    window.mensajeinfo3W += 1;
+    window.Hmensajeinfo3W += 1;
 
     
     var mensaje = new Container([], "div", {"class": "alert", "id": "Mensaje3W" + apuntador, "style": "box-sizing: border-box;width: 100%;display: grid;padding-right: 30px;padding-top: 5px;padding-left: 20px;border-radius: 35px;border-top-right-radius: 0;"+tipoAlerta});
@@ -1164,7 +1164,7 @@ function HAlerta(type, message, permanent = false) {
 
     //mensaje.Content.push("<br>");
     mensaje.Content.push(new Container('<span class="' +  icono + '"></span> <span>' + message + "<span>", "p", {"style": "font-size:30px;overflow-y: auto;margin-top: 30px;opacity: 0.5;margin-right: 50px;"}));
-    mensaje.Content.push(new Container("x", "a", {"style": "position: absolute;right: 5px;cursor: pointer;font-size: 60px;font-weight: 700;opacity: .5;box-sizing: border-box;font-family: sans-serif;", "class": "", "onclick": "window.mensajeinfo3W -= 1;QuitarMensaje('#Mensaje3W"+apuntador+"');"}));
+    mensaje.Content.push(new Container("x", "a", {"style": "position: absolute;right: 5px;cursor: pointer;font-size: 60px;font-weight: 700;opacity: .5;box-sizing: border-box;font-family: sans-serif;", "class": "", "onclick": "window.Hmensajeinfo3W -= 1;QuitarMensaje('#Mensaje3W"+apuntador+"');"}));
     //mensaje.Content.push("<br>");
 
     mensaje.Write("#Alerta3W");
@@ -1178,7 +1178,7 @@ function HAlerta(type, message, permanent = false) {
     }
     window.setTimeout(function () {
         if (document.getElementById("Mensaje3W" + apuntador) != null) {
-            window.mensajeinfo3W -= 1;
+            window.Hmensajeinfo3W -= 1;
         }
         QuitarMensaje("#Mensaje3W" + apuntador);        
 
