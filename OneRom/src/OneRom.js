@@ -1163,7 +1163,7 @@ function HAlerta(type, message, permanent = false) {
 
 
     //mensaje.Content.push("<br>");
-    mensaje.Content.push(new Container('<span class="' +  icono + '"></span> <span>' + message + "<span>", "p", {"style": "font-size:30px;overflow-y: auto;margin-top: 30px;opacity: 0.5;margin-right: 50px;"}));
+    mensaje.Content.push(new Container('<span class="' +  icono + '"></span> <span>' + message + "<span>", "p", {"style": "font-size:30px;overflow-y: auto;margin-top: 30px;opacity: 0.5;padding-right: 25px;"}));
     mensaje.Content.push(new Container("x", "a", {"style": "position: absolute;right: 5px;cursor: pointer;font-size: 60px;font-weight: 700;opacity: .5;box-sizing: border-box;font-family: sans-serif;", "class": "", "onclick": "window.Hmensajeinfo3W -= 1;QuitarMensaje('#Mensaje3W"+apuntador+"');"}));
     //mensaje.Content.push("<br>");
 
