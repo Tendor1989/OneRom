@@ -732,7 +732,7 @@ function HRadioButon(name, value, title, required, arrayCombox, objectsHtml = {}
     var Div = new Container("", "");
     var Label = new Container([title, SimboloRequerido], "label", {"for": name});
 
-    var Input = new Container([], "div", {"style": "display: block ruby;"});
+    var Input = new Container([], "div", {"style": "display: flex;"});
 
     for (var item of arrayCombox) {
         var DivRadio = new Container([], "div", {"style": "margin-right:5px"});
