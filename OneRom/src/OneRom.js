@@ -900,7 +900,7 @@ function HTabla(objectsHtml = {},ObjectsHtmlHeader={},ObjectsHtmlBody={}){
     }
     this.SetCelda = function (FilaIndex, Contenido, objectsHtmlCelda = {}){
 
-        this.Filas[FilaIndex].Content.push(new Container(Contenido, "th", objectsHtmlCelda));
+        this.Filas[FilaIndex].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
     }
     
     
