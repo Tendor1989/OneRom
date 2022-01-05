@@ -903,6 +903,9 @@ function HTabla(objectsHtml = {},ObjectsHtmlHeader={},ObjectsHtmlBody={}){
         this.Filas[FilaIndex].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
     }
     
+    this.GetContainer = function () {
+        return this.DivTabla;
+    }
     
     this.Write = function (Element) {
         this.DivTabla.Write(Element);
@@ -977,6 +980,11 @@ function Grid(objectsHtml = {}){
         
         this.Filas[FilaIndex].Content.push(new Container(Contenido,"div",objectsHtmlCelda));
     }
+    
+    this.GetContainer = function () {
+        return this.Div;
+    }
+
     this.Write = function (Element) {        
         this.Div.Write(Element);
     }
