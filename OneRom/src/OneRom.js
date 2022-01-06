@@ -393,6 +393,9 @@ function toObject(objeto, propiedad, valor, nombreControl = "") {
             }
             return Select;
         }
+        if (valor=="null" || valor=="undefined") {
+            return null;
+        }
         return valor;
     }
     var nombreProp = arryProp[0];
