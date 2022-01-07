@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 28 12 2021
+// Last Update  : 07 01 2022
 // ============================================================+
 
 
@@ -1087,7 +1087,7 @@ Object.defineProperty(this, "Hmensajeinfo3W", {get: function () {
             XMensaje.style.display = "none";
         } else if (Hmensajeinfo == 0 && value == 1) {
 
-            XMensaje.style.display = "block";
+            XMensaje.style.display = "ruby-text";
 
 
         }
@@ -1159,9 +1159,8 @@ function HAlerta(type, message, permanent = false) {
 
     var XMensaje = document.getElementById("Alerta3W");
     if (XMensaje == null) {
-        var div = new Container([], "div", {"id": "Alerta3W", "style": "position: fixed;right: 5px; top: 10px; z-index: 10000;text-align: center;max-height:75%;overflow-x: auto;"});
-        div.Content.push(new Container("x", "a", {"class": "", "id": "CerrarTodoMensaje3W", "style": "font-size: 50px;width: 55px;font-weight: 700;opacity: .5;display:none; background-color:red;color:white;border-radius:35px;padding-left:8px;padding-right:8px;padding-bottom:14px;position: absolute;right: 0;cursor: pointer;font-family: sans-serif;", "onclick": "QuitarMensaje('.alert'); window.Hmensajeinfo3W = 0;"}));
-        div.Content.push('<div style="height: 100px;"></div>');
+        var div = new Container([], "div", {"id": "Alerta3W", "style": "position: fixed;right: 5px; top: 10px; z-index: 10000;text-align: right;max-height:75%;overflow-x: auto;"});
+        div.Content.push(new Container("x", "a", {"class": "", "id": "CerrarTodoMensaje3W", "style": "font-size: 50px;width: 55px;font-weight: 700;opacity: .7;display:none; background-color:red;color:white;border-radius:35px;padding-left:14px;padding-right:14px;padding-bottom:7px;right: 0;cursor: pointer;font-family: sans-serif;", "onclick": "QuitarMensaje('.alert'); window.Hmensajeinfo3W = 0;"}));        
         div.Write("body");
     }
 
@@ -1169,7 +1168,7 @@ function HAlerta(type, message, permanent = false) {
     window.Hmensajeinfo3W += 1;
 
     
-    var mensaje = new Container([], "div", {"class": "alert", "id": "Mensaje3W" + apuntador, "style": "box-sizing: border-box;width: 100%;display: grid;padding-right: 30px;padding-top: 5px;padding-left: 20px;border-radius: 35px;border-top-right-radius: 0;"+tipoAlerta});
+    var mensaje = new Container([], "div", {"class": "alert", "id": "Mensaje3W" + apuntador, "style": "box-sizing: border-box;width: 100%;display: grid;padding-right: 30px;padding-top: 5px;padding-left: 20px;border-radius: 35px;border-top-right-radius: 0;margin-bottom: 5px;"+tipoAlerta});
 
 
 
