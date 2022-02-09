@@ -214,7 +214,9 @@ function Ajax(Url, Data, Success, Metod = "POST", RetrivalJson = true) {
                         result = JSON.parse(Request.response);
 
                     } catch (e) {
-                        AjaxFailServidor(Request.response);
+                        if (RetrivalJson) {
+                            AjaxFailServidor(Request.response);
+                        }
                         result = Request.response;
                     }
                     try {
