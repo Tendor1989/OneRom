@@ -289,7 +289,7 @@ Room = new function () {
                         try{
                           funcion.funcion(funcion.Codigo);
                         }
-                        catch{
+                        catch(e){
                          console.log("No se pudieron evaluar algunas funciones del Room"); 
                         }
                         
