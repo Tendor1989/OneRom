@@ -286,7 +286,13 @@ Room = new function () {
 //                        if (funcion.Codigo.includes("." + variable)) {
 //                            
 //                        }
-                        funcion.funcion(funcion.Codigo);
+                        try{
+                          funcion.funcion(funcion.Codigo);
+                        }
+                        catch{
+                         console.log("No se pudieron evaluar algunas funciones del Room"); 
+                        }
+                        
                     }
                 }, 100);
                 return valor;
