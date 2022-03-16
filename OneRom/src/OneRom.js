@@ -220,6 +220,9 @@ Room = new function () {
     }
 
     function EvaluarPropiedades(Control) {
+        if (Control.attributes==undefined) {
+            return;
+        }
         var ArrayAtributosBorrar = [];
         for (var atributo of Control.attributes) {
             if (atributo.name.includes("[")) {
