@@ -1344,7 +1344,7 @@ Room = new function () {
         }
     })
 
-    function QuitarMensaje(Target) {
+    this.QuitarMensaje =  function (Target) {
         var Alerta = document.querySelectorAll(Target);
         if (Alerta.length == 0) {
             return;
@@ -1409,7 +1409,7 @@ Room = new function () {
         var XMensaje = document.getElementById("Alerta3W");
         if (XMensaje == null) {
             var div = new Container([], "div", { "id": "Alerta3W", "style": "position: fixed;right: 5px; top: 10px; z-index: 10000;text-align: right;max-height:75%;overflow-x: auto;" });
-            div.Content.push(new Container("x", "a", { "class": "", "id": "CerrarTodoMensaje3W", "style": "font-size: 50px;width: 55px;font-weight: 700;opacity: .7;display:none; background-color:red;color:white;border-radius:35px;padding-left:14px;padding-right:14px;padding-bottom:7px;right: 0;cursor: pointer;font-family: sans-serif;", "onclick": "QuitarMensaje('.alert'); window.Hmensajeinfo3W = 0;" }));
+            div.Content.push(new Container("x", "a", { "class": "", "id": "CerrarTodoMensaje3W", "style": "font-size: 50px;width: 55px;font-weight: 700;opacity: .7;display:none; background-color:red;color:white;border-radius:35px;padding-left:14px;padding-right:14px;padding-bottom:7px;right: 0;cursor: pointer;font-family: sans-serif;", "onclick": "Room.QuitarMensaje('.alert'); window.Hmensajeinfo3W = 0;" }));
             div.Write("body");
         }
 
@@ -1423,7 +1423,7 @@ Room = new function () {
 
         //mensaje.Content.push("<br>");
         mensaje.Content.push(new Container('<span class="' + icono + '"></span> <span>' + message + "<span>", "p", { "style": "font-size:30px;overflow-y: auto;margin-top: 30px;opacity: 0.5;padding-right: 25px;" }));
-        mensaje.Content.push(new Container("x", "a", { "style": "position: absolute;right: 5px;cursor: pointer;font-size: 60px;font-weight: 700;opacity: .5;box-sizing: border-box;font-family: sans-serif;", "class": "", "onclick": "window.Hmensajeinfo3W -= 1;QuitarMensaje('#Mensaje3W" + apuntador + "');" }));
+        mensaje.Content.push(new Container("x", "a", { "style": "position: absolute;right: 5px;cursor: pointer;font-size: 60px;font-weight: 700;opacity: .5;box-sizing: border-box;font-family: sans-serif;", "class": "", "onclick": "window.Hmensajeinfo3W -= 1;Room.QuitarMensaje('#Mensaje3W" + apuntador + "');" }));
         //mensaje.Content.push("<br>");
 
         mensaje.Write("#Alerta3W");
@@ -1439,7 +1439,7 @@ Room = new function () {
             if (document.getElementById("Mensaje3W" + apuntador) != null) {
                 window.Hmensajeinfo3W -= 1;
             }
-            QuitarMensaje("#Mensaje3W" + apuntador);
+            Room.QuitarMensaje("#Mensaje3W" + apuntador);
 
         }, 6000);
 
