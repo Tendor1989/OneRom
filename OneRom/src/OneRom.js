@@ -1359,7 +1359,7 @@ Room = new function () {
 
                 var XMensajes = document.querySelectorAll(Target);
                 if (XMensajes.length > 0) {
-                    QuitarMensaje(Target);
+                    Room.QuitarMensaje(Target);
                 }
             }
         }, 50);
