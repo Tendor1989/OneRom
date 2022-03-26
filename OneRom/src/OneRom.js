@@ -1039,9 +1039,9 @@ Room = new function () {
 
             if (objectsHtml.onchange == undefined) {
 
-                objectsHtml.onchange = "HChangeFile(this);";
+                objectsHtml.onchange = "Room.Helpers.HChangeFile(this);";
             } else {
-                objectsHtml.onchange += "HChangeFile(this);";
+                objectsHtml.onchange += "Room.Helpers.HChangeFile(this);";
 
             }
 
@@ -1061,7 +1061,7 @@ Room = new function () {
 
             return Div;
         }
-        function HChangeFile(element) {
+        this.HChangeFile =  function (element) {
             var label = element.nextElementSibling,
                 labelVal = label.innerHTML;
 
