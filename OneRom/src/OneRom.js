@@ -1287,7 +1287,7 @@ Room = new function () {
                         Focus = false;
                     }
                     SingleGetControls = true;
-                    var Control = Door[Validacion[0]] //document.querySelector("[x-value='" + Validacion[0] + "']");
+                    var Control = document.querySelector("[x-value='" + Validacion[0] + "']").value;
                     var Span = document.getElementById("Validation-" + Validacion[0]);
                     if (Control && ClaseInput != "") {
                         if (Control.length != undefined) {
