@@ -1244,16 +1244,6 @@ Room = new function () {
 
         }
 
-        function HFocusControl(control) {
-            SingleGetControls = true;
-            var Control = Door[control];
-            if (Control.length != undefined) {
-                Control[0].focus();
-            } else {
-                Control.focus();
-            }
-        }
-
         this.HValidacionRequeridos = function (ClaseInput = "", ClassSpan = "") {
             var ArrayClaseInput = ClaseInput.split(" ");
             var ArrayClassSpan = ClassSpan.split(" ");
@@ -1282,12 +1272,12 @@ Room = new function () {
                 }
 
                 for (let Validacion of this.validacionesArray) {
+                    var Control = document.querySelector("[x-value='" + Validacion[0] + "']");
                     if (Focus) {
-                        HFocusControl(Validacion[0]);
+                        Control.focus();
                         Focus = false;
                     }
                     SingleGetControls = true;
-                    var Control = document.querySelector("[x-value='" + Validacion[0] + "']").value;
                     var Span = document.getElementById("Validation-" + Validacion[0]);
                     if (Control && ClaseInput != "") {
                         if (Control.length != undefined) {
