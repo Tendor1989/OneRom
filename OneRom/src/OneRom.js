@@ -1306,7 +1306,7 @@ Room = new function () {
                         Control.focus();
                         Focus = false;
                     }
-                    SingleGetControls = true;
+                    
                     var Span = document.getElementById("Validation-" + Validacion[0]);
                     if (Control && ClaseInput != "") {
                         if (Control.length != undefined) {
