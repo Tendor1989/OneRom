@@ -4,7 +4,6 @@
 // Author       : Angel Paredes
 // Begin        : agosto 2019
 // Last Update  : 14 03 2022
-// Actualizando desde visual studio
 // ============================================================+
 
 var Door = {};
