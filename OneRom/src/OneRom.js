@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 14 03 2022
+// Last Update  : 22 04 2022
 // ============================================================+
 
 var Door = {};
@@ -220,7 +220,7 @@ Room = new function () {
     }
 
     function EvaluarPropiedades(Control) {
-        if (Control.attributes==undefined) {
+        if (Control.attributes == undefined) {
             return;
         }
         var ArrayAtributosBorrar = [];
@@ -327,13 +327,13 @@ Room = new function () {
                         return Elem.NombrePropiedad != "[value]";
                     })
                 }
-                var NombreControlSinCorchetes = NombreControl.replace("[","\\u005B");
-                NombreControlSinCorchetes = NombreControlSinCorchetes.replace("]","\\u005D");
+                var NombreControlSinCorchetes = NombreControl.replace("[", "\\u005B");
+                NombreControlSinCorchetes = NombreControlSinCorchetes.replace("]", "\\u005D");
                 var ExpresionCualquienCaracter = new RegExp(NombreControlSinCorchetes + "[^0-9 a-z A-Z .]+", 'g');
                 var ExpresionFinLinea = new RegExp(NombreControlSinCorchetes + "$", 'g');
                 var ExpresionEspacionBlanco = new RegExp(NombreControlSinCorchetes + ' ', 'g');
-                
-                ListaFunciones = ListaFunciones.filter(function (Elem) { return Elem.Codigo.match(ExpresionCualquienCaracter)||Elem.Codigo.match(ExpresionFinLinea)|| Elem.Codigo.match(ExpresionEspacionBlanco) || Elem.NombreDoor == null })
+
+                ListaFunciones = ListaFunciones.filter(function (Elem) { return Elem.Codigo.match(ExpresionCualquienCaracter) || Elem.Codigo.match(ExpresionFinLinea) || Elem.Codigo.match(ExpresionEspacionBlanco) || Elem.NombreDoor == null })
                 ListaFunciones.forEach(function (funcion) {
 
                     try {
@@ -600,7 +600,7 @@ Room = new function () {
             }
             return false;
         };
-        
+
         toObject(Door, Control.getAttribute("x-value"), Control.value);
         this.Leido = true;
         window.setTimeout(function () {
@@ -689,14 +689,14 @@ Room = new function () {
             nombreProp = nombreProp.split("[")[0];
             //Propiedades no definidas
             if (objeto[nombreProp] == undefined) {
-                var NombreFurniture = nombreControl.split("[");                
-                Room.Furniture=Room.Furniture.filter(E=>E!="Door."+NombreFurniture[0]);
+                var NombreFurniture = nombreControl.split("[");
+                Room.Furniture = Room.Furniture.filter(E => E != "Door." + NombreFurniture[0]);
                 objeto[nombreProp] = [];
             }
 
             if (objeto[nombreProp][key] == undefined) {
-                var NombreFurniture = nombreControl.replace("[",".").replace("]","");
-                Room.Furniture=Room.Furniture.filter(E=>E!="Door."+NombreFurniture);
+                var NombreFurniture = nombreControl.replace("[", ".").replace("]", "");
+                Room.Furniture = Room.Furniture.filter(E => E != "Door." + NombreFurniture);
                 objeto[nombreProp][key] = {};
             }
 
@@ -713,9 +713,9 @@ Room = new function () {
             //Propiedades no definidas
             if (objeto[nombreProp] == undefined) {
                 var NombreFurniture = nombreControl;
-                Room.Furniture=Room.Furniture.filter(E=>E!="Door."+NombreFurniture);
+                Room.Furniture = Room.Furniture.filter(E => E != "Door." + NombreFurniture);
                 if (arryProp.length == 0) {
-                    objeto[nombreProp] = "";                    
+                    objeto[nombreProp] = "";
                 } else {
                     objeto[nombreProp] = {};
                 }
@@ -748,6 +748,35 @@ Room = new function () {
             objectsHtml.type = "text";
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
+            var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
+            var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
+            var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
+            var Div = new Container("", "");
+            var Label = new Container([title, SimboloRequerido], "label", { "for": name });
+
+
+            var Input = new Container("", "input", objectsHtml);
+
+            Div.Content = [];
+            Div.Content.push(Label);
+            Div.Content.push(Input);
+            Div.Content.push(validacion);
+
+            return Div;
+
+        }
+
+        this.HPasword = function (name, value, title, required, objectsHtml = {}) {
+
+            var Id = name;
+            if (objectsHtml.id == undefined)
+                objectsHtml.id = name;
+            if (objectsHtml.name == undefined)
+                objectsHtml.name = name;
+            objectsHtml.type = "password";
+            objectsHtml["x-value"] = name;
+            objectsHtml.value = "";
+            objectsHtml.autocomplete = "new-password"
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
@@ -1061,7 +1090,7 @@ Room = new function () {
 
             return Div;
         }
-        this.HChangeFile =  function (element) {
+        this.HChangeFile = function (element) {
             var label = element.nextElementSibling,
                 labelVal = label.innerHTML;
 
@@ -1334,7 +1363,7 @@ Room = new function () {
         }
     })
 
-    this.QuitarMensaje =  function (Target) {
+    this.QuitarMensaje = function (Target) {
         var Alerta = document.querySelectorAll(Target);
         if (Alerta.length == 0) {
             return;
