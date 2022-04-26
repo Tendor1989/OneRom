@@ -65,6 +65,7 @@ var MultiGetControls = false;
 Room = new function () {
     this.Furniture = [];
     this.FuncionesBinding = [];
+    this.Components = {}
     //------------------------Programacion HTML---------------------------------
     if (!Object.prototype.watch) {
         Object.defineProperty(
@@ -163,17 +164,73 @@ Room = new function () {
     sleep = function (ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
+
+    var Component = function (Control, FuncionStart = undefined) {
+        this.Control = Control;
+        this.Start = FuncionStart;
+        var ComponentName = Control.attributes["x-component"].value;
+
+        this.Paint = (Container, CleanOtherContainers = true, CleanDoor = false) => {
+            this.Control.style.opacity = 0;
+            Opacity = 0;
+            Show = async function (Control) {
+                if (Opacity < 1) {
+                    Opacity += 0.075
+                    setTimeout(function () { Show(Control); }, 100);
+                }
+                Control.style.opacity = Opacity;
+            }
+
+            if (CleanOtherContainers == true) {
+                for (let Component in Room.Components) {
+                    Room.Components[Component].Control.innerHTML = "";
+                }
+            }
+            if (CleanDoor) {
+                Door = {};
+            }
+            if (Array.isArray(Container)) {
+                for (let Contenedor of Container) {
+                    Contenedor.Write("[x-component=" + ComponentName + "]");
+                }
+            }
+            else {
+                Container.Write("[x-component=" + ComponentName + "]");
+            }
+
+            Show(this.Control);
+        }
+    }
+
     this.RestartComponents = async function () {
         // asleep();
         //Room.Funciones = [];
         var Controles = document.querySelectorAll("[x-component]");
-
+        var MetodosStart = [];
         for (let item of Controles) {
 
             RecorrerHijos(item);
+
+
+
+            if (Room.Components[item.attributes["x-component"].value] == undefined) {
+                Room.Components[item.attributes["x-component"].value] = {};
+                var codigo = undefined;
+                if (item.attributes["x-start"]) {
+                    codigo = item.attributes["x-start"].value;
+                    MetodosStart.push(codigo);
+                    item.removeAttribute("x-start");
+                }
+                Room.Components[item.attributes["x-component"].value] = new Component(item, codigo);
+            }
         }
 
         construirPropiedad(Door, "Door");
+
+        MetodosStart.forEach(element => {
+            eval(element);
+        });
     }
 
     function RecorrerHijos(Elemento) {
@@ -1255,8 +1312,13 @@ Room = new function () {
                 this.Filas.push(new Container([], "div", objectsHtmlFila));
             }
             this.SetCelda = function (FilaIndex, Contenido, objectsHtmlCelda = {}) {
+                if (FilaIndex == "last") {
+                    this.Filas[this.Filas.length - 1].Content.push(new Container(Contenido, "div", objectsHtmlCelda));
+                }
+                else {
+                    this.Filas[FilaIndex].Content.push(new Container(Contenido, "div", objectsHtmlCelda));
+                }
 
-                this.Filas[FilaIndex].Content.push(new Container(Contenido, "div", objectsHtmlCelda));
             }
 
             this.GetContainer = function () {
@@ -1306,7 +1368,7 @@ Room = new function () {
                         Control.focus();
                         Focus = false;
                     }
-                    
+
                     var Span = document.getElementById("Validation-" + Validacion[0]);
                     if (Control && ClaseInput != "") {
                         if (Control.length != undefined) {
