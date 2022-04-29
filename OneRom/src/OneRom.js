@@ -201,6 +201,9 @@ Room = new function () {
 
             Show(this.Control);
         }
+        this.Clear = ()=>{
+            document.querySelector("[x-component=" + ComponentName + "]").innerHTML="";
+        }
     }
 
     this.RestartComponents = async function () {
