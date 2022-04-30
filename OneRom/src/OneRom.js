@@ -1003,6 +1003,34 @@ Room = new function () {
             return Div;
         }
 
+        this.HDateTime = function (name, value, title, required, objectsHtml = {}) {
+
+            var Id = name;
+            if (objectsHtml.id == undefined)
+                objectsHtml.id = name;
+            if (objectsHtml.name == undefined)
+                objectsHtml.name = name;
+            objectsHtml["x-value"] = name;
+            objectsHtml.value = value;
+            objectsHtml.type = "datetime-local";
+
+            var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
+            var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
+            var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
+            var Div = new Container("", "");
+            var Label = new Container([title, SimboloRequerido], "label", { "for": name });
+
+
+            var Calendar = new Container("", "input", objectsHtml);
+
+            Div.Content = [];
+            Div.Content.push(Label);
+            Div.Content.push(Calendar);
+            Div.Content.push(validacion);
+
+            return Div;
+        }
+
         this.HHours = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
