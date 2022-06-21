@@ -1330,7 +1330,7 @@ Room = new function () {
                 Contenedor.insertAdjacentHTML("beforeend", WriteElement(this));
             }
             this.Html = function () {
-                return WriteElement(this).outerHTML;
+                return WriteElement(this);
             }
         }
 
