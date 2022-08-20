@@ -501,7 +501,10 @@ Room = new function () {
         }
 
     }
-
+    var max = 99999999;
+    var min = 10000000;
+    SessionTab =  Math.floor(Math.random() * (max - min + 1) + min);
+    
     /**
      * Ajax
      * @param Url :  Url POST/GET
@@ -590,7 +593,7 @@ Room = new function () {
          * POST/GET a la url introducida
          **/
         this.Send = function () {
-
+            document.cookie = 'tab_session_id=' + SessionTab;
             AjaxStartServidor();
             Request.addEventListener("progress", this.UpdateProgress, false);
             Request.addEventListener("load", this.TransferComplete, false);
