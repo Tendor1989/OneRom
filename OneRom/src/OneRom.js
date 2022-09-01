@@ -348,7 +348,7 @@ Room = new function () {
         //debugger;
         if (Array.isArray(objeto) && objeto.length > 0) {
             for (var propiedad in objeto) {
-                construirPropiedad(objeto[propiedad], NombreProp + "." + propiedad);
+                construirPropiedad(objeto[propiedad], NombreProp + "[" + propiedad+"]");
             }
         }
         if (typeof objeto === 'object' && objeto !== null && !Array.isArray(objeto)) {
