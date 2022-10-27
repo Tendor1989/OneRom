@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 22 04 2022
+// Last Update  : 27 10 2022
 // ============================================================+
 
 var Door = {};
@@ -170,8 +170,8 @@ Room = new function () {
         this.Control = Control;
         this.Start = FuncionStart;
         var ComponentName = Control.attributes["x-component"].value;
-
-        this.Paint = (Container, CleanOtherContainers = true, CleanDoor = false) => {
+        
+        this.Paint = async (Container, CleanOtherContainers = true, CleanDoor = false, CleanContainers=true) => {
             this.Control.style.opacity = 0;
             Opacity = 0;
             Show = async function (Control) {
@@ -180,6 +180,11 @@ Room = new function () {
                     setTimeout(function () { Show(Control); }, 100);
                 }
                 Control.style.opacity = Opacity;
+            }
+
+            if (CleanContainers) {
+                var Contenedor = document.querySelector("[x-component=" + ComponentName + "]");
+                Contenedor.innerHTML="";
             }
 
             if (CleanOtherContainers == true) {
@@ -192,11 +197,11 @@ Room = new function () {
             }
             if (Array.isArray(Container)) {
                 for (let Contenedor of Container) {
-                    Contenedor.Write("[x-component=" + ComponentName + "]");
+                    await Contenedor.Write("[x-component=" + ComponentName + "]");
                 }
             }
             else {
-                Container.Write("[x-component=" + ComponentName + "]");
+                await Container.Write("[x-component=" + ComponentName + "]");
             }
 
             Show(this.Control);
@@ -1265,8 +1270,8 @@ Room = new function () {
                 return this.DivTabla;
             }
 
-            this.Write = function (Element) {
-                this.DivTabla.Write(Element);
+            this.Write = async function (Element) {
+                await this.DivTabla.Write(Element);
             }
             this.Html = function () {
 
@@ -1328,9 +1333,12 @@ Room = new function () {
             this.Content = Content;
             this.Type = Type;
             this.objectsHtml = objectsHtml;
-            this.Write = function (Element) {
+            this.Write = async function (Element) {                
                 var Contenedor = document.querySelector(Element);
+                if(!Contenedor)
+                throw  'El control '+Element+' no fue encuentrado';
                 Contenedor.insertAdjacentHTML("beforeend", WriteElement(this));
+                await sleep(200);
             }
             this.Html = function () {
                 return WriteElement(this);
@@ -1359,8 +1367,8 @@ Room = new function () {
                 return this.Div;
             }
 
-            this.Write = function (Element) {
-                this.Div.Write(Element);
+            this.Write = async function (Element) {
+                await this.Div.Write(Element);
             }
             this.Html = function () {
 
