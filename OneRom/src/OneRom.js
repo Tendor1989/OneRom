@@ -170,8 +170,8 @@ Room = new function () {
         this.Control = Control;
         this.Start = FuncionStart;
         var ComponentName = Control.attributes["x-component"].value;
-        
-        this.Paint = async (Container, CleanOtherContainers = true, CleanDoor = false, CleanContainers=true) => {
+
+        this.Paint = async (Container, CleanOtherContainers = true, CleanDoor = false, CleanContainers = true) => {
             this.Control.style.opacity = 0;
             Opacity = 0;
             Show = async function (Control) {
@@ -184,7 +184,7 @@ Room = new function () {
 
             if (CleanContainers) {
                 var Contenedor = document.querySelector("[x-component=" + ComponentName + "]");
-                Contenedor.innerHTML="";
+                Contenedor.innerHTML = "";
             }
 
             if (CleanOtherContainers == true) {
@@ -206,8 +206,8 @@ Room = new function () {
 
             Show(this.Control);
         }
-        this.Clear = ()=>{
-            document.querySelector("[x-component=" + ComponentName + "]").innerHTML="";
+        this.Clear = () => {
+            document.querySelector("[x-component=" + ComponentName + "]").innerHTML = "";
         }
     }
 
@@ -353,7 +353,7 @@ Room = new function () {
         //debugger;
         if (Array.isArray(objeto) && objeto.length > 0) {
             for (var propiedad in objeto) {
-                construirPropiedad(objeto[propiedad], NombreProp + "[" + propiedad+"]");
+                construirPropiedad(objeto[propiedad], NombreProp + "[" + propiedad + "]");
             }
         }
         if (typeof objeto === 'object' && objeto !== null && !Array.isArray(objeto)) {
@@ -508,8 +508,8 @@ Room = new function () {
     }
     var max = 99999999;
     var min = 10000000;
-    SessionTab =  Math.floor(Math.random() * (max - min + 1) + min);
-    
+    SessionTab = Math.floor(Math.random() * (max - min + 1) + min);
+
     /**
      * Ajax
      * @param Url :  Url POST/GET
@@ -806,6 +806,14 @@ Room = new function () {
     //---------------------------Helpers------------------------------
     this.Helpers = new function () {
 
+        /**
+         * This function is used to create a input text
+         * @param {String} name = name and id of the input
+         * @param {String} value
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+         */
         this.HInput = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
@@ -816,6 +824,7 @@ Room = new function () {
             objectsHtml.type = "text";
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
+            objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
@@ -833,7 +842,14 @@ Room = new function () {
             return Div;
 
         }
-
+        /**
+         * This function is used to create a input password
+         * @param {String} name = name and id of the input
+         * @param {String} value
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+         */
         this.HPasword = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
@@ -863,6 +879,14 @@ Room = new function () {
 
         }
 
+        /**
+         * This function is used to create a textarea
+         * @param {String} name = name and id of the textarea
+         * @param {String} value
+         * @param {String} title = title of the textarea
+         * @param {boolean} required = if the textarea is required
+         * @param {object} objectsHtml = attributes of the textarea
+         */
         this.HTextArea = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
@@ -873,7 +897,7 @@ Room = new function () {
                 objectsHtml.name = name;
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
-
+            objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
@@ -891,7 +915,14 @@ Room = new function () {
             return Div;
 
         }
-
+        /**
+         * This function is used to create a input number
+         * @param {String} name = name and id of the input
+         * @param {String} value
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+         */
         this.HNumeric = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
@@ -902,7 +933,7 @@ Room = new function () {
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
             objectsHtml.type = "number";
-
+            objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
@@ -920,7 +951,13 @@ Room = new function () {
             return Div;
 
         }
-
+        /**
+         * This function is used to create a link
+         * @param {String} name = name and id of the link
+         * @param {String} value = text of the link
+         * @param {object} objectsHtml = attributes of the link
+         * @param {String} icon = class of the vectorial icon
+         */
         this.HLink = function (name, value, objectsHtml = {}, icon = "") {
             if (objectsHtml.id == undefined)
                 objectsHtml.id = name;
@@ -941,7 +978,15 @@ Room = new function () {
 
             return Link;
         }
-
+        /**
+         * This function is used to create a select
+         * @param {String} name = name and id of the select
+         * @param {String} value
+         * @param {String} title = title of the select
+         * @param {boolean} required = if the select is required
+         * @param {Array} arrayCombox = array of objects options of the select
+         * @param {object} objectsHtml = attributes of the select
+        */
         this.HComboBox = function (name, value, title, required, arrayCombox, objectsHtml = {}) {
             var Id = name;
             if (objectsHtml.id == undefined)
@@ -982,7 +1027,14 @@ Room = new function () {
             Div.Content.push(validacion);
             return Div;
         }
-
+        /**
+         * This function is used to create a input type date
+         * @param {String} name = name and id of the input
+         * @param {String} value = value of the input in format yyyy-mm-dd
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+        */
         this.HCalendar = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
@@ -1010,7 +1062,14 @@ Room = new function () {
 
             return Div;
         }
-
+        /**
+         * This function is used to create a input type datetime-local
+         * @param {String} name = name and id of the input
+         * @param {String} value = value of the input in format yyyy-mm-ddThh:mm
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+        */
         this.HDateTime = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
@@ -1038,7 +1097,14 @@ Room = new function () {
 
             return Div;
         }
-
+        /**
+         * This function is used to create a input type time
+         * @param {String} name = name and id of the input
+         * @param {String} value = value of the input in format hh:mm
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+        */
         this.HHours = function (name, value, title, required, objectsHtml = {}) {
 
             var Id = name;
@@ -1066,7 +1132,14 @@ Room = new function () {
 
             return Div;
         }
-
+        /**
+         * This function is used to create a button
+         * @param {String} name = name and id of the button
+         * @param {String} type = type of the button
+         * @param {String} value = text of the button
+         * @param {object} objectsHtml = attributes of the button
+         * @param {String} icon = class of the vectorial icon
+        */
         this.HButton = function (name, type, value, objectsHtml = {}, icon = "") {
 
             if (objectsHtml.id == undefined)
@@ -1083,7 +1156,15 @@ Room = new function () {
             return Button;
 
         }
-
+        /**
+         * This function is used to create a input type radio
+         * @param {String} name = name and id of the input
+         * @param {String} value = value of the input
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {array} arrayCombox = array of objects with the values and text of the radio
+         * @param {object} objectsHtml = attributes of the input
+        */
         this.HRadioButon = function (name, value, title, required, arrayCombox, objectsHtml = {}) {
             var Id = name;
             if (objectsHtml.id == undefined)
@@ -1129,7 +1210,13 @@ Room = new function () {
 
             return Div;
         }
-
+        /**
+         * This function is used to create a input type file
+         * @param {String} name = name and id of the input
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+        */
         this.HFile = function (name, title, required, objectsHtml = {}) {
             var Id = name;
 
@@ -1203,7 +1290,14 @@ Room = new function () {
 
 
         }
-
+        /**
+         * This function is used to create a input type checkbox
+         * @param {String} name = name and id of the input
+         * @param {String} value = value of the input
+         * @param {String} title = title of the input
+         * @param {boolean} required = if the input is required
+         * @param {object} objectsHtml = attributes of the input
+        */
         this.HCheckBox = function (name, value, title, required, objectsHtml = null) {
 
             var Id = name;
@@ -1238,7 +1332,19 @@ Room = new function () {
             return Div;
 
         }
-
+        /**
+         * This function is used to create a table
+         * @param {object} objectsHtml = attributes of the table
+         * @param {object} ObjectsHtmlHeader = attributes of the header
+         * @param {object} ObjectsHtmlBody = attributes of the body
+         * Comun functions
+         * SetFilaHeader = Set row of the header
+         * SetCeldaHeader = Set cell of the header
+         * SetFila = Set row of the body
+         * SetCelda = Set cell of the body setCelda("last",Contenido[,objectsHtml])
+         * Write = Write the table in the elemento html Write("body")
+         * Html = Return the html of the table
+        */
         this.HTabla = function (objectsHtml = {}, ObjectsHtmlHeader = {}, ObjectsHtmlBody = {}) {
             this.DivTabla = new Container([], "table", objectsHtml);
             this.Header = new Container([], "thead", ObjectsHtmlHeader);
@@ -1262,8 +1368,13 @@ Room = new function () {
                 this.Filas.push(new Container([], "tr", objectsHtmlEncabezado));
             }
             this.SetCelda = function (FilaIndex, Contenido, objectsHtmlCelda = {}) {
-
-                this.Filas[FilaIndex].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
+                if (FilaIndex == "last") {
+                    this.Filas[this.Filas.length-1].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
+                }
+                else {
+                    this.Filas[FilaIndex].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
+                }
+                
             }
 
             this.GetContainer = function () {
@@ -1333,10 +1444,10 @@ Room = new function () {
             this.Content = Content;
             this.Type = Type;
             this.objectsHtml = objectsHtml;
-            this.Write = async function (Element) {                
+            this.Write = async function (Element) {
                 var Contenedor = document.querySelector(Element);
-                if(!Contenedor)
-                throw  'El control '+Element+' no fue encuentrado';
+                if (!Contenedor)
+                    throw 'El control ' + Element + ' no fue encuentrado';
                 Contenedor.insertAdjacentHTML("beforeend", WriteElement(this));
                 await sleep(200);
             }
@@ -1344,7 +1455,13 @@ Room = new function () {
                 return WriteElement(this);
             }
         }
-
+        /**
+         * This function is used to create a grid
+         * @param {object} objectsHtml = attributes of the grid
+         * Comun functions
+         * SetFila = Set row of the grid setFila([objectsHtml]])
+         * SetCelda = Set cell of the grid setCelda("last",Contenido[,objectsHtml])
+        */
         this.Grid = function (objectsHtml = {}) {
             this.Div = new Container("", "div", objectsHtml);
             this.Filas = []
@@ -1376,7 +1493,14 @@ Room = new function () {
             }
 
         }
-
+        /**
+         * This function validadte the required fields
+         * @param {string} ClaseInput = class to add or remove when the input is error validation
+         * @param {string} ClassSpan = class to add or remove when the span is error validation
+         * Comun functions
+         * validacionesArray fill with the validations Validacion.validacionesArray.push(["input_name", "element is required"])
+         * Validar = validate the required fields
+        */
         this.HValidacionRequeridos = function (ClaseInput = "", ClassSpan = "") {
             var ArrayClaseInput = ClaseInput.split(" ");
             var ArrayClassSpan = ClassSpan.split(" ");
@@ -1441,6 +1565,16 @@ Room = new function () {
 
         }
 
+        this.InputMaxLengthOnPaste = function (e, input) {
+
+            //si el texto que se va a pegar es mayor al maximo permitido no se pegara y manda un alert de error
+            if (input.maxLength > 0)
+                if (e.clipboardData.getData('text/plain').length + input.value.length > input.maxLength) {
+                    e.preventDefault();
+                    HAlerta("error", "El texto que intenta pegar debe ser menor a " + input.maxLength + " caracteres");
+                }
+
+        }
     }
 
     //-----------------------Metodos utiles-----------------------------------------
