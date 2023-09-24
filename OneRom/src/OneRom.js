@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 27 10 2022
+// Last Update  : 24 09 2023
 // ============================================================+
 
 var Door = {};
@@ -428,6 +428,9 @@ Room = new function () {
     //------------------------Navegacion Ajax ---------------------------------
     window.onpopstate = function (event) {
         window.NavigationState = true;
+        if (event.state == null) {
+            return;
+        }
         Door = event.state.Door;
         sessionStorage.setItem("Door", JSON.stringify(Door));
         var ParametrosUrl = new URLSearchParams(location.search);
@@ -1369,12 +1372,12 @@ Room = new function () {
             }
             this.SetCelda = function (FilaIndex, Contenido, objectsHtmlCelda = {}) {
                 if (FilaIndex == "last") {
-                    this.Filas[this.Filas.length-1].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
+                    this.Filas[this.Filas.length - 1].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
                 }
                 else {
                     this.Filas[FilaIndex].Content.push(new Container(Contenido, "td", objectsHtmlCelda));
                 }
-                
+
             }
 
             this.GetContainer = function () {
@@ -1444,11 +1447,25 @@ Room = new function () {
             this.Content = Content;
             this.Type = Type;
             this.objectsHtml = objectsHtml;
-            this.Write = async function (Element) {
-                var Contenedor = document.querySelector(Element);
-                if (!Contenedor)
-                    throw 'El control ' + Element + ' no fue encuentrado';
-                Contenedor.insertAdjacentHTML("beforeend", WriteElement(this));
+            this.Write = async function (Element, position = "beforeend") {
+                /**
+                 * Verifica si el objeto Element está definido en el ámbito global, de lo contrario, 
+                 * busca el primer elemento que coincida con el selector especificado en el documento.
+                 * @param {string|Element} Element - El selector del elemento o el propio elemento.
+                 * @returns {Element} - El elemento seleccionado.
+                 * @position {string} - beforeend= dentro al final, afterbegin= dentro al inicio, afterend= despues del elemento, beforebegin= antes del elemento
+                 */
+                const Elemento = typeof Element === 'object' ? Element : document.querySelector(Element);
+                if (!Elemento) throw `El control ${Element} no fue encontrado`;
+                if (position == "beforeend")
+                    Elemento.insertAdjacentHTML('beforeend', WriteElement(this));
+                else if (position == "afterbegin")
+                    Elemento.insertAdjacentHTML('afterbegin', WriteElement(this));
+                else if (position == "afterend")
+                    Elemento.insertAdjacentHTML('afterend', WriteElement(this));
+                else if (position == "beforebegin")
+                    Elemento.insertAdjacentHTML('beforebegin', WriteElement(this));
+                //Elemento.insertAdjacentHTML('beforeend', WriteElement(this));
                 await sleep(200);
             }
             this.Html = function () {
