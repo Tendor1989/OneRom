@@ -1437,8 +1437,11 @@ Room = new function () {
                     eval(valor);
                 }
                 Room.FuncionesBinding.push({ "funcion": funcion, "Codigo": codigo, "NombreDoor": Elemto.getAttribute("x-value"), "NombrePropiedad": Prop[0] });
-
-                eval(codigo);
+                try {
+                    eval(codigo);
+                } catch (error) {
+                    
+                }
             }
         
             if (Array.isArray(container.Content)) {
