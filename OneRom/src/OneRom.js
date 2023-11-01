@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 24 09 2023
+// Last Update  : 01 11 2023
 // ============================================================+
 
 var Door = {};
@@ -1396,53 +1396,74 @@ Room = new function () {
 
         WriteElement = function (container) {
 
+            var Elemento = null;
             if (container == null || container == undefined) {
-                return "";
+                return document.createTextNode("");
             }
             if (typeof container !== 'object' && !Array.isArray(container)) {
+        
                 return container;
             }
-            var Elemento = null;
             if (container.Type != "") {
                 Elemento = document.createElement(container.Type);
             } else {
                 Elemento = document.createElement("div");
-
+        
             }
             var PropiedadesProgramables = [];
             if (container.objectsHtml) {
                 Object.keys(container.objectsHtml).forEach(function (propiedad) {
                     if (propiedad.includes("[")) {
-                        PropiedadesProgramables.push(propiedad + '="' + container.objectsHtml[propiedad] + '"');
-                    } else {
+                        PropiedadesProgramables.push([propiedad , container.objectsHtml[propiedad]]);
+                    } 
+                    else if (typeof container.objectsHtml[propiedad] !== "string") {
+                        Elemento[propiedad] = container.objectsHtml[propiedad];
+                    }
+                    else{
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
                     }
-
                 })
             }
+        
+            for (let Prop of PropiedadesProgramables) {
+                
+                var StringSinCorchetes = Prop[0].split("[").join("");
+                StringSinCorchetes = StringSinCorchetes.split("]").join("");
+                var codigo = ValidaAtributosEspeciales(StringSinCorchetes, Prop[1], Elemento);
+        
+                var Elemto = Elemento;
+        
+                var funcion = function (valor) {
+                    eval(valor);
+                }
+                Room.FuncionesBinding.push({ "funcion": funcion, "Codigo": codigo, "NombreDoor": Elemto.getAttribute("x-value"), "NombrePropiedad": Prop[0] });
 
+                eval(codigo);
+            }
+        
             if (Array.isArray(container.Content)) {
                 for (var item in container.Content) {
-                    Elemento.innerHTML += WriteElement(container.Content[item]);
+                    let Cont = WriteElement(container.Content[item]);
+                    if (typeof Cont === 'string') {
+                        Elemento.insertAdjacentHTML('beforeend', Cont);
+                    } else {
+                        Elemento.appendChild(Cont);
+                    }
+        
                 }
             } else {
-                Elemento.innerHTML = WriteElement(container.Content);
-            }
-            if (container.Type != "") {
-                if (PropiedadesProgramables.length > 0) {
-                    var ArrayElemento = Elemento.outerHTML.split(">");
-                    ArrayElemento[0] = ArrayElemento[0] + " " + PropiedadesProgramables.join(" ");
-                    var ElementoTempo = document.createElement("div");
-                    ElementoTempo.innerHTML = ArrayElemento.join(">");
-                    Elemento = ElementoTempo.firstChild;
+                let Cont = WriteElement(container.Content);
+                if (typeof Cont === 'string') {
+                    Elemento.insertAdjacentHTML('beforeend', Cont);
+                } else {
+                    Elemento.appendChild(Cont);
                 }
-
-                return Elemento.outerHTML;
-            } else {
-                return Elemento.innerHTML;
             }
+        
+            return Elemento;
+        
         }
-
+        
         Container = function (Content, Type, objectsHtml = null) {
             this.Content = Content;
             this.Type = Type;
@@ -1458,14 +1479,15 @@ Room = new function () {
                 const Elemento = typeof Element === 'object' ? Element : document.querySelector(Element);
                 if (!Elemento) throw `El control ${Element} no fue encontrado`;
                 if (position == "beforeend")
-                    Elemento.insertAdjacentHTML('beforeend', WriteElement(this));
+                    Elemento.insertAdjacentElement("beforeend",WriteElement(this));
                 else if (position == "afterbegin")
-                    Elemento.insertAdjacentHTML('afterbegin', WriteElement(this));
-                else if (position == "afterend")
-                    Elemento.insertAdjacentHTML('afterend', WriteElement(this));
-                else if (position == "beforebegin")
-                    Elemento.insertAdjacentHTML('beforebegin', WriteElement(this));
-                //Elemento.insertAdjacentHTML('beforeend', WriteElement(this));
+                    Elemento.insertAdjacentElement("afterbegin",WriteElement(this));
+                else if (position == "afterend") {
+                    Elemento.insertAdjacentElement("afterend", WriteElement(this));
+                }
+                else if (position == "beforebegin") {
+                    Elemento.insertAdjacentElement("beforebegin",WriteElement(this));
+                }
                 await sleep(200);
             }
             this.Html = function () {
