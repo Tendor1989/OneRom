@@ -1494,7 +1494,7 @@ Room = new function () {
                 await sleep(200);
             }
             this.Html = function () {
-                return WriteElement(this);
+                return WriteElement(this).outerHTML;
             }
         }
         /**
