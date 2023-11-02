@@ -1249,7 +1249,7 @@ Room = new function () {
             if (objectsHtml.style == undefined) {
                 objectsHtml.style = "width: 0.1px!important;height: 0.1px!important;opacity: 0;overflow: hidden;position: absolute;";
             } else {
-                objectsHtml.style += "width: 0.1px!important;height: 0.1px!important;opacity: 0;overflow: hidden;position: absolute;";
+                objectsHtml.style += ";width: 0.1px!important;height: 0.1px!important;opacity: 0;overflow: hidden;position: absolute;";
             }
 
             if (objectsHtml.onchange == undefined) {
