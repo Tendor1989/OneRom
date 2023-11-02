@@ -1447,19 +1447,19 @@ Room = new function () {
             if (Array.isArray(container.Content)) {
                 for (var item in container.Content) {
                     let Cont = WriteElement(container.Content[item]);
-                    if (typeof Cont === 'string') {
-                        Elemento.insertAdjacentHTML('beforeend', Cont);
-                    } else {
+                    if (typeof Cont === 'object') {
                         Elemento.appendChild(Cont);
+                    } else {
+                        Elemento.insertAdjacentHTML('beforeend', Cont);
                     }
         
                 }
             } else {
                 let Cont = WriteElement(container.Content);
-                if (typeof Cont === 'string') {
-                    Elemento.insertAdjacentHTML('beforeend', Cont);
-                } else {
+                if (typeof Cont === 'object') {
                     Elemento.appendChild(Cont);
+                } else {
+                    Elemento.insertAdjacentHTML('beforeend', Cont);
                 }
             }
         
