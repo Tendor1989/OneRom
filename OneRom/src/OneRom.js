@@ -1421,6 +1421,9 @@ Room = new function () {
                     }
                     else{
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
+                        if (propiedad!=="class" && propiedad!=="style") {
+                            Elemento[propiedad] = container.objectsHtml[propiedad];
+                        }
                     }
                 })
             }
