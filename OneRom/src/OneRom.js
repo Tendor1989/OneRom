@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 01 11 2023
+// Last Update  : 06 11 2023
 // ============================================================+
 
 var Door = {};
@@ -161,6 +161,10 @@ Room = new function () {
             }
         });
     }
+
+    /**
+     * @param {*} value : valor en milisegundos
+     */
     sleep = function (ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -170,7 +174,13 @@ Room = new function () {
         this.Control = Control;
         this.Start = FuncionStart;
         var ComponentName = Control.attributes["x-component"].value;
-
+        /**
+         * 
+         * @param {*} Container | RoomJsx
+         * @param {*} CleanOtherContainers "Limpia los demas contenedores"
+         * @param {*} CleanDoor "Limpia el objeto Door"
+         * @param {*} CleanContainers "Limpia el contenedor actual"
+         */
         this.Paint = async (Container, CleanOtherContainers = true, CleanDoor = false, CleanContainers = true) => {
             this.Control.style.opacity = 0;
             Opacity = 0;
@@ -195,6 +205,8 @@ Room = new function () {
             if (CleanDoor) {
                 Door = {};
             }
+            if(Container instanceof RoomJsx)
+            Container = Container.TranspilarAContainer();
             if (Array.isArray(Container)) {
                 for (let Contenedor of Container) {
                     await Contenedor.Write("[x-component=" + ComponentName + "]");
@@ -233,7 +245,12 @@ Room = new function () {
                 Room.Components[item.attributes["x-component"].value] = new Component(item, codigo);
             }
         }
-
+        
+        let ControlesLoad =document.querySelectorAll("[rjsxload]");
+        ControlesLoad.forEach(function (Control) {
+            Control.onload();
+            Control.removeAttribute("rjsxload");
+        });
         construirPropiedad(Door, "Door");
 
         MetodosStart.forEach(element => {
@@ -338,7 +355,25 @@ Room = new function () {
 
         return NombreAtributo;
     }
-
+    /**
+     * 
+     * @param {*} Control 
+     * @returns primer elemento padre que contenga el atributo
+     */
+    Element.prototype.parentElementSpecific= function (Control){  
+        let obtenerPadreDeTipo = function (elemento,name) {
+          while (elemento && elemento.tagName !== name.toUpperCase()) {
+              elemento = elemento.parentNode;
+          }
+          return elemento;
+      }
+      return obtenerPadreDeTipo(this,Control);
+    }
+    /**
+     * 
+     * @param {*} Arreglo 
+     * @returns boolean
+     */
     String.prototype.includesAll = function (Arreglo) {
         var Cadena = this;
         for (var subCaden of Arreglo) {
@@ -450,6 +485,12 @@ Room = new function () {
         window[event.state.Metodo].apply(null, Argum);
         Room.Restart();
     };
+    /**
+     * ActivaNavegacionAjax
+     * @param PaginaInicio : Metodo de la pagina de inicio
+     * 
+     * Activa la navegacion ajax
+    */
     ActivaNavegacionAjax = function (PaginaInicio) {
         if (window.NavigationState == undefined) {
             window.NavigationState = false;
@@ -478,7 +519,15 @@ Room = new function () {
         }
         Room.Restart();
     }
-
+    /**
+     * CargarPaginaNavegacionAjax
+     * @param Door : Objeto Door
+     * @param ParamUrl : Parametros de la url
+     * @param EsInicio : Si es la pagina de inicio
+     * 
+     * Carga una pagina con navegacion ajax
+     * 
+     */
     CargarPaginaNavegacionAjax = function (Door, ParamUrl, EsInicio = false) {
         sessionStorage.setItem("Door", JSON.stringify(Door));
         var ParametrosUrl = new URLSearchParams(ParamUrl);
@@ -493,16 +542,29 @@ Room = new function () {
         NavigationState = false;
     }
 
+
+    /**
+     * AjaxFailServidor
+     * Se ejecuta al fallar el servidor
+     */
     AjaxFailServidor = function (event) {
         if (Debug) {
             console.log(event);
         }
     };
+    /**
+     * AjaxStartServidor
+     * Se ejecuta al iniciar el envio de informacion
+     */
     AjaxStartServidor = function () {
         if (Debug) {
             console.log("Inicia POST/GET");
         }
     };
+    /**
+     * AjaxFinallyServidor
+     * Se ejecuta al terminar de responder el servidor
+     */
     AjaxFinallyServidor = function () {
         if (Debug) {
             console.log("Finaliso POST/GET");
@@ -678,7 +740,10 @@ Room = new function () {
             Room.RestartComponents();
         }, 10);
     }
-
+    /**
+     * Restart
+     * Reinicia el Door
+     */
     this.Restart = function () {
 
         var Controles = document.querySelectorAll("[x-component] [x-value]");
@@ -712,6 +777,7 @@ Room = new function () {
             console.log(Door);
         }
     });
+
     function toObject(objeto, propiedad, valor, nombreControl = "") {
 
         key = "";
@@ -827,6 +893,7 @@ Room = new function () {
             objectsHtml.type = "text";
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
+            if(objectsHtml.maxLength)
             objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
@@ -900,6 +967,7 @@ Room = new function () {
                 objectsHtml.name = name;
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
+            if(objectsHtml.maxLength)
             objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
@@ -936,6 +1004,7 @@ Room = new function () {
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
             objectsHtml.type = "number";
+            if(objectsHtml.maxLength)
             objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
@@ -1404,12 +1473,14 @@ Room = new function () {
         
                 return container;
             }
+
             if (container.Type != "") {
                 Elemento = document.createElement(container.Type);
             } else {
                 Elemento = document.createElement("div");
         
             }
+            //Codigo para armar las propiedades
             var PropiedadesProgramables = [];
             if (container.objectsHtml) {
                 Object.keys(container.objectsHtml).forEach(function (propiedad) {
@@ -1417,14 +1488,27 @@ Room = new function () {
                         PropiedadesProgramables.push([propiedad , container.objectsHtml[propiedad]]);
                     } 
                     else if (typeof container.objectsHtml[propiedad] !== "string") {
-                        Elemento[propiedad] = container.objectsHtml[propiedad];
+                        if (!Elemento[propiedad]) {
+                                Elemento[propiedad] = container.objectsHtml[propiedad];
+                                if (propiedad==="onload") 
+                                    Elemento.setAttribute("rjsxLoad","");
+                        }
+                        else{
+                            console.error("Esta intentando sobre escribir una propiedad", propiedad);
+                        }
                     }
                     else{
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
+                        
+                        if (!Elemento[propiedad] && propiedad !== "style" && propiedad !== "class" ) {
+                            Elemento[propiedad] = container.objectsHtml[propiedad];
+                        }
+                        
                     }
                 })
             }
-        
+
+            //Codigo para armar las propiedades programables
             for (let Prop of PropiedadesProgramables) {
                 
                 var StringSinCorchetes = Prop[0].split("[").join("");
@@ -1467,6 +1551,12 @@ Room = new function () {
         
         }
         
+        /**
+         * This function is used to create a container
+         * @param {String|Array|Container} Content = content of the container
+         * @param {String} Type = type of the container
+         * @param {object} objectsHtml = attributes of the container
+         */
         Container = function (Content, Type, objectsHtml = null) {
             this.Content = Content;
             this.Type = Type;
@@ -1685,6 +1775,12 @@ Room = new function () {
         }, 50);
     }
 
+    /**
+     * This function is used to create a alert
+     * @param {String} type = type of the alert
+     * @param {String} message = text of the alert
+     * @param {boolean} permanent = if the alert is permanent
+     */
     HAlerta = function (type, message, permanent = false) {
 
 
@@ -1744,11 +1840,21 @@ Room = new function () {
 
     }
 
+    /**
+     * 
+     * @param {*} search 
+     * @param {*} replacement 
+     * @returns 
+     */
     String.prototype.replaceAll = function (search, replacement) {
         var target = this;
         return target.split(search).join(replacement);
     }
-
+    /**
+     * 
+     * @param {*} Format 
+     * @returns 
+     */
     Date.prototype.toString = function (Format = "yyyy/mm/dd") {
 
         var date = new Date(this.valueOf());
@@ -1773,6 +1879,13 @@ Room = new function () {
         return Fecha;
     }
 
+    /**
+     * 
+     * @param {*} Nombre 
+     * @param {*} Objeto 
+     * @param {*} ArregloPropiedadesQuitar 
+     * @returns 
+     */
     FormData.prototype.add = function (Nombre, Objeto, ArregloPropiedadesQuitar = []) {
         this.QuitarPropiedadesBasura = function (key, value) {
             var ParametrosNotAcepted = ArregloPropiedadesQuitar;
@@ -1789,3 +1902,511 @@ Room = new function () {
         this.append(Nombre, Objeto);
     };
 };
+
+class RoomJsx {
+    Type = "div";
+    Content = [];
+    Properties = {};
+    Rows = [];
+    Name = "";
+    Value = "";
+    Title = "";
+    Required = false;
+    Icon = "";
+    Headers = [];
+    Body = [];    
+    Options = [];
+    TypeButton = "button";
+    
+    
+    /**
+     * Creates a new instance of OneRom.
+     * @constructor
+     * @param {Object} options - The options object.
+        * Normal Element
+        * @param {string} options.Type - The type of the OneRom.
+        * @param {string} options.Content - The content of the OneRom.
+        * @param {Object} options.Properties - The properties of the OneRom.
+        * 
+        * Helpers
+        * @param {string} options.Type - The type of the OneRom.
+        * @param {string} options.Name - The name of the OneRom.
+        * @param {string} options.Value - The value of the OneRom.
+        * @param {string} options.Title - The title of the OneRom.
+        * @param {boolean} options.Required - Whether the OneRom is required or not.
+        * @param {string} options.Icon - The icon of the OneRom.
+        * @param {Object} options.Options - The options of the OneRom.
+        * @param {string} options.TypeButton - The type of button of the OneRom.
+        * @param {Object} options.Properties - The properties of the OneRom.
+        * 
+        * Grid
+        * @param {string} options.Type - The type of the OneRom.
+        * @param {number} options.Rows - The number of rows of the OneRom.
+        * @param {Object} options.Properties - The properties of the OneRom.
+        * 
+        * Table
+        * @param {string} options.Type - The type of the OneRom.
+        * @param {Object} options.Headers - The headers of the OneRom.
+        * @param {Object} options.Body - The body of the OneRom.
+        * @param {Object} options.Properties - The properties of the OneRom.
+     */
+    constructor({ Type, Content, Properties, Rows, Name, Value, Title, Required, Icon, Headers, Body, Options, TypeButton,  }={}) {
+        if(Type===undefined){
+            throw new Error("RoomJsx() sin objeto no valido, lo correcto es RoomJsx({Type:''})");
+        }
+
+        this.Type = Type;
+        this.Content = Content;
+        this.Properties = Properties;
+        this.Rows = Rows;
+        this.Name = Name;
+        this.Value = Value;
+        this.Title = Title;
+        this.Required = Required;
+        this.Icon = Icon;
+        this.Headers = Headers;
+        this.Body = Body;        
+        this.Options = Options;
+        this.TypeButton = TypeButton;
+        
+    }
+    
+
+    static AddPropiedades(valor, Propiedades) {
+        return { "": valor, "Propiedades": Propiedades };
+    }
+
+    ValidaTranspilarEstilos(Propiedades) {
+        if (Propiedades.style) {
+            let style = JSON.stringify(Propiedades.style).replaceAll(/[{}"]/g, '').replaceAll(',', ';');
+            Propiedades.style = style;
+        }
+
+        return Propiedades;
+    }
+
+    TranspilarAContainer() {
+        let Elemento = this;
+        let Propiedades = Elemento.Properties;
+        if (Propiedades)
+            Propiedades = this.ValidaTranspilarEstilos(Propiedades);
+
+        if (Room.Helpers.hasOwnProperty(Elemento.Type)) {
+            const Helpers = [];
+            const InputComun = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Propiedades) };
+            const Tabla = () => {                
+
+                if (Propiedades.Ajax) {                    
+                    Propiedades.class= "RoomJsxTable";
+                    Propiedades.RoomJsxType="Tabla";  
+                    Propiedades.onload= function(){this.CargarDatos(this);};                  
+                    Propiedades.CargarDatos = 
+                    function({ Filt = this.Filtros, Ord = this.Orders, Pag = this.PaginaActual }){  
+                        let Elemento = this;
+                        RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Filt, Ord, Pag);
+                        Elemento.removeAttribute("AjaxUrl");
+                    }
+                    
+                }
+                
+                let Tabla = new Room.Helpers[Elemento.Type](Propiedades);
+
+                if (Elemento.Headers) {
+                    let headerrow = 0;
+                    for (let Header of Elemento.Headers) {
+                        let Encabesado;
+                        if (Array.isArray(Header)) {
+                            Encabesado = Header;
+                            Tabla.SetFilaHeader();
+                        }
+                        else {
+                            let PropHeader = this.ValidaTranspilarEstilos(Object.values(Header)[1]);
+                            Tabla.SetFilaHeader(PropHeader);
+                            Encabesado = Object.values(Header)[0];
+                        }
+
+                        for (let Column of Encabesado) {
+
+                            if (typeof Column === 'string') {
+                                Tabla.SetCeldaHeader(headerrow, Column);
+                            }
+                            else if (Column instanceof RoomJsx) {
+                                Tabla.SetCeldaHeader(headerrow, Column.TranspilarAContainer());
+                            }
+                            else {
+                                let PropTh = this.ValidaTranspilarEstilos(Object.values(Column)[1]);
+
+                                let valor = Object.values(Column)[0];
+                                if (typeof valor === 'string') {
+                                    Tabla.SetCeldaHeader(headerrow, valor, PropTh);
+                                }
+                                else {
+                                    Tabla.SetCeldaHeader(headerrow, valor.TranspilarAContainer(), PropTh);
+                                }
+                            }
+                        }
+                        headerrow++;
+                    }
+                }
+
+                if (Elemento.Body) {
+                    let bodyrow = 0;
+                    for (let Body of Elemento.Body) {
+                        let Cuerpo;
+                        if (Array.isArray(Body)) {
+                            Tabla.SetFila();
+                            Cuerpo = Body;
+                        }
+                        else {
+                            let PropBody = this.ValidaTranspilarEstilos(Object.values(Body)[1]);
+                            Tabla.SetFila(PropBody);
+                            Cuerpo = Object.values(Body)[0];
+                        }
+
+                        for (let Column of Cuerpo) {
+                            if (typeof Column === 'string') {
+                                Tabla.SetCelda(bodyrow, Column);
+                            }
+                            else if (Column instanceof RoomJsx) {
+                                Tabla.SetCelda(bodyrow, Column.TranspilarAContainer());
+                            }
+                            else {
+                                let PropTd = this.ValidaTranspilarEstilos(Object.values(Column)[1]);
+
+                                let valor = Object.values(Column)[0];
+                                if (typeof valor === 'string') {
+                                    Tabla.SetCelda(bodyrow, valor, PropTd);
+                                }
+                                else {
+                                    Tabla.SetCelda(bodyrow, valor.TranspilarAContainer(), PropTd);
+                                }
+                            }
+
+                        }
+                        bodyrow++;
+                    }
+                }
+
+                return Tabla.GetContainer();
+            };
+            const Grid = () => {
+                let Grid = new Room.Helpers[Elemento.Type](Propiedades);
+                if (Elemento.Rows) {
+
+                    for (let Row of Elemento.Rows) {
+                        let Fila;
+                        if (Array.isArray(Row)) {
+                            Grid.SetFila();
+                            Fila = Row;
+                        }
+                        else {
+                            let PropRow = this.ValidaTranspilarEstilos(Object.values(Row)[1]);
+                            Grid.SetFila(PropRow);
+                            Fila = Object.values(Row)[0];
+                        }
+
+                        for (let Cell of Fila) {
+                            if (typeof Cell === 'string') {
+                                Grid.SetCelda("last", Cell);
+                            }
+                            else if (Cell instanceof RoomJsx) {
+                                Grid.SetCelda("last", Cell.TranspilarAContainer());
+                            }
+                            else {
+
+                                let PropTd = this.ValidaTranspilarEstilos(Object.values(Cell)[1]);
+                                let valor = Object.values(Cell)[0];
+                                if (typeof valor === 'string') {
+                                    Grid.SetCelda("last", valor, PropTd);
+                                }
+                                else {
+                                    Grid.SetCelda("last", valor.TranspilarAContainer(), PropTd);
+                                }
+                            }
+                        }
+                    }
+
+                }
+                return Grid;
+            };
+
+            Helpers["HInput"] = InputComun;
+            Helpers["HPasword"] = InputComun;
+            Helpers["HTextArea"] = InputComun;
+            Helpers["HNumeric"] = InputComun;
+            Helpers["HCalendar"] = InputComun;
+            Helpers["HDateTime"] = InputComun;
+            Helpers["HHours"] = InputComun;
+            Helpers["HCheckBox"] = InputComun;
+            Helpers["HFile"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Title, Elemento.Required, Propiedades) };
+            Helpers["HLink"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Propiedades, Elemento.Icon) };
+            Helpers["HComboBox"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Elemento.Options, Propiedades) };
+            Helpers["HButton"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.TypeButton, Elemento.Value, Propiedades, Elemento.Icon) };
+            Helpers["HRadioButon"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Elemento.arrayRadio, Propiedades) };
+            Helpers["HTabla"] = Tabla;
+            Helpers["Grid"] = Grid;
+
+            return Helpers[Elemento.Type]();
+        }
+        let ElementoContainer = new Container([], Elemento.Type, Propiedades);
+        if (typeof Elemento.Content === 'string' || Elemento.Content ===null || Elemento.Content === undefined) {
+            ElementoContainer.Content.push(Elemento.Content);
+        } else {
+            for (const Child of Elemento.Content) {
+                //si es un string o null lo agrega al container si no se transpila
+                if (typeof Child === 'string' || Child ===null || Child === undefined) {
+                    ElementoContainer.Content.push(Child);
+                } else {
+                    ElementoContainer.Content.push(Child.TranspilarAContainer());
+                }
+            }
+        }
+        return ElementoContainer;
+    }
+
+    static EstilosBotonesPaginacion = {
+        "width": "35px",
+        "color": "white",
+        "border-radius": "15px",
+        "box-sizing": "border-box",
+        "background-color": "#022b34"
+
+    };
+
+    static BusquedaPaginacion = (Elemnt,Pagina)=>{         
+        let Elemento = Elemnt.parentElementSpecific("table");
+        RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Elemento.Filtros, Elemento.Orders, Pagina);
+    };
+
+    static BusquedaFiltros = (Elemnt) => {
+        Elemnt.Filtros={};
+        //agregar la clase RoomJsxFiltro
+        Elemnt.classList.add("RoomJsxFiltro");
+        Elemnt.addEventListener("change", function () {
+            
+            let Elemento = this.parentElementSpecific("table");
+            //optenme todos los inputs con la clase RoomJsxFiltro
+            let Filtros = Elemento.Filtros;
+            
+            let Elementos = document.querySelectorAll(".RoomJsxFiltro");
+            for (let Elemento of Elementos) {
+                Elemento.CargarFiltros();
+                let FiltrosInput =Elemento.Filtros;                
+                
+                for (let key in FiltrosInput) {                    
+                    if (FiltrosInput[key]==="") {
+                        delete Filtros[key];
+                        continue;
+                    }
+                    Filtros[key] = FiltrosInput[key];
+                }
+            }
+            
+            
+            RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Filtros, Elemento.Orders, 1);
+        });
+    };
+
+    static OrdenarTabla = (Elemnt) => {
+        Elemnt.Orders={};
+        Elemnt.Orden=Elemnt.Orden;
+        Elemnt.classList.add("RoomJsxOrden");
+        Elemnt.addEventListener("click", function () {
+            let Elemento = this.parentElementSpecific("table");
+            //optenme todos los inputs con la clase RoomJsxFiltro
+            
+            this.OrdenarTabla();
+
+            RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Elemento.Filtros, this.Orders, 1);
+        });
+    }
+
+    static async TablaAyaxCargar(Elemento, Url, Filtros, Orders, Pagina = 1) {
+
+        if (Elemento === null) {
+            console.error("No se encontro la tabla");
+            return;
+        }
+
+        if (!Elemento.Pintar) {
+            Elemento.Pintar = function () {
+                RoomJsx.TablaAyaxCargar(this, this.AjaxUrl, this.Filtros, this.Orders, 1);
+            };
+        }
+
+        //fetch a la url en AjaxUrl        
+        Elemento.AjaxUrl = Url;
+        Elemento.PaginaActual = parseInt(Pagina);
+        Elemento.TotalPaginas = 0;
+        Elemento.TotalRegistros = 0;
+        Elemento.Filtros = Filtros;
+
+        const Data = new FormData();
+        Data.append('RoomJsxPaginaActual', Elemento.PaginaActual);
+        Data.append('RoomJsxFiltros', JSON.stringify(Filtros));
+        Data.append('RoomJsxOrders', JSON.stringify(Orders));
+
+        let url = Elemento.AjaxUrl;
+        let options = {
+            method: 'POST',
+            body: Data,
+
+        };
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            if (data.error) {
+                HAlerta("error", data.error);
+                return;
+            }
+            Elemento.PaginaActual = parseInt(data.PaginaActual);
+            Elemento.TotalPaginas = parseInt(data.TotalPaginas);
+            Elemento.TotalRegistros = parseInt(data.TotalRegistros);
+            let Rows = [];
+            for (let row of data.Rows) {
+                let rowContainer = new RoomJsx({
+                    "Type": "tr",
+                    "Content": []
+                });
+                for (let cell of row) {
+                    let cellContainer = new RoomJsx({
+                        "Type": "td",
+                        "Content": [cell]
+                    });
+                    rowContainer.Content.push(cellContainer);
+                }
+
+                Rows.push(rowContainer);
+            }
+
+            Elemento.querySelector("tbody").innerHTML = "";
+            if (Elemento.querySelector("#ControlesPaginacion"))
+                Elemento.querySelector("#ControlesPaginacion").remove();
+            //Cargar un titulo desues de la tabla
+
+            let ControlesPaginacion = new RoomJsx({
+                "Type": "Grid",
+                "Rows": [],
+                "Properties": {
+                    "id": "ControlesPaginacion",
+                    "style": {
+                        "margin-top": "10px",
+                        "width": "100%",
+                        "position": "absolute",
+                    }
+                }
+            });
+
+
+            let TituloTotalRegistros = new RoomJsx({
+                "Type": "h7",
+                "Content": `Total de registros: ${Elemento.TotalRegistros}`,
+                "Properties": {
+                    "style": {
+                        "margin-right": "20px"
+                    }
+                }
+            });
+
+            let TituloTotalPaginas = new RoomJsx({
+                "Type": "h7",
+                "Content": `Total de paginas: ${Elemento.TotalPaginas}`,
+                "Properties": {
+                    "style": {
+                        "margin-right": "20px"
+                    }
+                }
+            });
+
+            let Controles = new RoomJsx({
+                "Type": "div",
+                "Content": [],
+                "Properties": {
+                    "style": {
+                        "right": "0px",
+                    }
+                }
+            });
+            if (Elemento.TotalPaginas > 1) {
+
+
+                const BotonPaginacion = (valor, funcion) => {
+                    return new RoomJsx({
+                        "Type": "HButton",
+                        "Name": "",
+                        "TypeButton": "button",
+                        "Value": valor,
+                        "Icon": "",
+                        "Properties": {
+                            "style": RoomJsx.EstilosBotonesPaginacion,
+                            "onclick": `${funcion}`,
+                            "CargarDatos": RoomJsx.BusquedaPaginacion
+                        }
+                    });
+                }
+
+
+                const Paginacion = [];
+
+                if (Elemento.PaginaActual > 1) {
+                    Paginacion.push(BotonPaginacion("<< ", `this.CargarDatos(this,1);`));
+
+                    Paginacion.push(BotonPaginacion("<", `this.CargarDatos(this,${Elemento.PaginaActual - 1});`));
+                }
+
+                // Paginas de la izquierda
+                for (let index = Elemento.PaginaActual - 2; index < Elemento.PaginaActual; index++) {
+                    if (index < 1) {
+                        continue;
+                    }
+                    Paginacion.push(BotonPaginacion(index, `this.CargarDatos(this,${index});`));
+                }
+
+                Paginacion.push(BotonPaginacion("[" + Elemento.PaginaActual + "]", ``));
+
+                // Paginas de la derecha
+                for (let index = Elemento.PaginaActual + 1; index < Elemento.PaginaActual + 3; index++) {
+                    if (index > Elemento.TotalPaginas) {
+                        break;
+                    }
+                    Paginacion.push(BotonPaginacion(index, `this.CargarDatos(this,${index});`));
+                }
+
+                if (Elemento.PaginaActual < Elemento.TotalPaginas) {
+                    Paginacion.push(BotonPaginacion(">", `this.CargarDatos(this,${Elemento.PaginaActual + 1});`));
+
+                    Paginacion.push(BotonPaginacion(">>", `this.CargarDatos(this,${Elemento.TotalPaginas});`));
+                }
+
+               
+                for (let ButtonPagina of Paginacion) {
+                    Controles.Content.push(ButtonPagina);
+                }
+                //Controles.Content = ArrayControles;
+            }
+
+
+            ControlesPaginacion.Rows = [
+                RoomJsx.AddPropiedades([TituloTotalRegistros, TituloTotalPaginas, Controles], { "style": { "display": "inline-flex" } })
+
+            ];
+            ControlesPaginacion.Write(Elemento, "beforeend");
+
+            for (let row of Rows) {
+                row.Write(Elemento.querySelector("tbody"));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    Write(query = "body", position) {
+        let Elemento = this.TranspilarAContainer();
+        Elemento.Write(query, position);
+    }
+
+    Html() {
+        let Elemento = this.TranspilarAContainer();
+        return Elemento.Html();
+    }
+}
