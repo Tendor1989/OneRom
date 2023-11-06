@@ -399,7 +399,8 @@ Room = new function () {
             if (Room.Furniture.find(NomPopi => NomPopi == NombreProp)) {
                 return;
             }
-            Room.Furniture.push(NombreProp);
+            
+            
             var ArrayPropiedad = NombreProp.split(".");
             var NombreObjeto = "";
             var NombrePropiedadFinal = "";
@@ -415,6 +416,14 @@ Room = new function () {
             NombrePropiedadFinal = ArrayPropiedad[ArrayPropiedad.length - 1];
             var ejecutable = "var DoorTemp = " + NombreObjeto + ";";
             //        console.log(NombrePropiedadSinDoor);
+            //si NombrePropiedadFinal es un numero
+            let elementodor=document.querySelector("[x-value='" + NombrePropiedadSinDoor + "']")
+            //si no existe el elemento
+            if(elementodor==null){
+                return;
+            }
+            Room.Furniture.push(NombreProp);
+
             eval(ejecutable);
             DoorTemp.watch(NombrePropiedadFinal, function (variable, prop, valor, NombreControl) {
                 var ConValue = Room.FuncionesBinding.find(function (Elem) {
