@@ -1987,7 +1987,10 @@ class RoomJsx {
 
     ValidaTranspilarEstilos(Propiedades) {
         if (Propiedades.style) {
-            let style = JSON.stringify(Propiedades.style).replaceAll(/[{}"]/g, '').replaceAll(',', ';');
+            let style="";
+            for (let Prop in Propiedades.style) {
+              style+=Prop+":"+Propiedades.style[Prop]+";";  
+            }            
             Propiedades.style = style;
         }
 
