@@ -1572,7 +1572,7 @@ Room = new function () {
             this.objectsHtml = objectsHtml;
             this.Write = async function (Element, position = "beforeend") {
                 /**
-                 * Verifica si el objeto Element está definido en el ámbito global, de lo contrario, 
+                 * Verifica si el objeto Element estÃ¡ definido en el Ã¡mbito global, de lo contrario, 
                  * busca el primer elemento que coincida con el selector especificado en el documento.
                  * @param {string|Element} Element - El selector del elemento o el propio elemento.
                  * @returns {Element} - El elemento seleccionado.
@@ -1910,6 +1910,90 @@ Room = new function () {
         }
         this.append(Nombre, Objeto);
     };
+
+    this.Live = function(RutaPantalla) {
+        if(!RutaPantalla){
+          console.error("No se ha definido la pantalla");
+          return;
+        }
+        
+        if (document.getElementById("RomLivejs")) {
+          return;
+        }        
+        
+        console.info("Activo... live.js");
+        var ContadorLiveScritp = 0;
+      
+      
+        function actualizarScript() {
+      
+          var script = document.createElement('script');
+          script.src = RutaPantalla + '?v=' + ContadorLiveScritp;
+          document.head.appendChild(script);
+          ContadorLiveScritp++;
+        }
+      
+        let EstyloIcono = new RoomJsx({
+          "Type": "style",
+          "Content": `
+          #RoomRefreshIcon {
+            display: inline-block;
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 20px;
+            height: 20px;
+          }
+          
+          #RoomRefreshIcon.RoomSpin {  
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: RoomSpin 0.7s linear infinite;
+          }
+          
+          /* Safari */
+          @-webkit-keyframes RoomSpin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+          }
+          
+          @keyframes RoomSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `
+        });
+      
+        EstyloIcono.Write("head");
+      
+        let IconoLive = new RoomJsx({
+          "Type": "span",
+          "Content": `<div id="RoomRefreshIcon"></div>`,
+          "Properties": {
+            "id": "RomLivejs",
+            "style": {
+              "top": '10px',
+              "right": '10px',
+              "z-index": '100',
+              "font-size": '20px',
+              "color": 'red',
+              "position": 'fixed'
+            },
+            "onclick": function () {
+              var script = document.querySelector("script[src*='" + RutaPantalla + "']");
+              if (script) {
+                script.remove();
+              }
+              actualizarScript();
+              document.getElementById('RoomRefreshIcon').classList.add('RoomSpin');
+              setTimeout(function () {
+                document.getElementById('RoomRefreshIcon').classList.remove('RoomSpin');
+              }, 800);
+            }
+          }
+        });
+      
+        IconoLive.Write("body");
+      }
 };
 
 class RoomJsx {
