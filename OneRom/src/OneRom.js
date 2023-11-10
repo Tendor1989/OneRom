@@ -1501,7 +1501,9 @@ Room = new function () {
                     if (propiedad.includes("[")) {
                         PropiedadesProgramables.push([propiedad, container.objectsHtml[propiedad]]);
                     }
-                    else if (typeof container.objectsHtml[propiedad] !== "string") {
+                    //si container.objectsHtml[propiedad] es igual a objeto o funcion
+                    else if (typeof container.objectsHtml[propiedad] === "object" || typeof container.objectsHtml[propiedad] === "function") {
+                    //else if (typeof container.objectsHtml[propiedad] !== "string") {
                         if (!Elemento[propiedad]) {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
                             if (propiedad === "onload")
