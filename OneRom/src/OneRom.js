@@ -205,8 +205,8 @@ Room = new function () {
             if (CleanDoor) {
                 Door = {};
             }
-            if(Container instanceof RoomJsx)
-            Container = Container.TranspilarAContainer();
+            if (Container instanceof RoomJsx)
+                Container = Container.TranspilarAContainer();
             if (Array.isArray(Container)) {
                 for (let Contenedor of Container) {
                     await Contenedor.Write("[x-component=" + ComponentName + "]");
@@ -245,8 +245,8 @@ Room = new function () {
                 Room.Components[item.attributes["x-component"].value] = new Component(item, codigo);
             }
         }
-        
-        let ControlesLoad =document.querySelectorAll("[rjsxload]");
+
+        let ControlesLoad = document.querySelectorAll("[rjsxload]");
         ControlesLoad.forEach(function (Control) {
             Control.onload();
             Control.removeAttribute("rjsxload");
@@ -360,14 +360,14 @@ Room = new function () {
      * @param {*} Control 
      * @returns primer elemento padre que contenga el atributo
      */
-    Element.prototype.parentElementSpecific= function (Control){  
-        let obtenerPadreDeTipo = function (elemento,name) {
-          while (elemento && elemento.tagName !== name.toUpperCase()) {
-              elemento = elemento.parentNode;
-          }
-          return elemento;
-      }
-      return obtenerPadreDeTipo(this,Control);
+    Element.prototype.parentElementSpecific = function (Control) {
+        let obtenerPadreDeTipo = function (elemento, name) {
+            while (elemento && elemento.tagName !== name.toUpperCase()) {
+                elemento = elemento.parentNode;
+            }
+            return elemento;
+        }
+        return obtenerPadreDeTipo(this, Control);
     }
     /**
      * 
@@ -399,8 +399,8 @@ Room = new function () {
             if (Room.Furniture.find(NomPopi => NomPopi == NombreProp)) {
                 return;
             }
-            
-            
+
+
             var ArrayPropiedad = NombreProp.split(".");
             var NombreObjeto = "";
             var NombrePropiedadFinal = "";
@@ -417,9 +417,9 @@ Room = new function () {
             var ejecutable = "var DoorTemp = " + NombreObjeto + ";";
             //        console.log(NombrePropiedadSinDoor);
             //si NombrePropiedadFinal es un numero
-            let elementodor=document.querySelector("[x-value='" + NombrePropiedadSinDoor + "']")
+            let elementodor = document.querySelector("[x-value='" + NombrePropiedadSinDoor + "']")
             //si no existe el elemento
-            if(elementodor==null){
+            if (elementodor == null) {
                 return;
             }
             Room.Furniture.push(NombreProp);
@@ -470,7 +470,8 @@ Room = new function () {
     }, 10);
 
     //------------------------Navegacion Ajax ---------------------------------
-    window.onpopstate = function (event) {
+    window.onpopstate = async function (event) {
+        
         window.NavigationState = true;
         if (event.state == null) {
             return;
@@ -492,6 +493,7 @@ Room = new function () {
         }
 
         window[event.state.Metodo].apply(null, Argum);
+        await sleep(250);
         Room.Restart();
     };
     /**
@@ -500,7 +502,8 @@ Room = new function () {
      * 
      * Activa la navegacion ajax
     */
-    ActivaNavegacionAjax = function (PaginaInicio) {
+    ActivaNavegacionAjax = async function (PaginaInicio) {
+        await sleep(250);
         if (window.NavigationState == undefined) {
             window.NavigationState = false;
         }
@@ -526,6 +529,7 @@ Room = new function () {
         } else {
             window[PaginaInicio].apply(null, Argum);
         }
+        await sleep(250);
         Room.Restart();
     }
     /**
@@ -537,7 +541,7 @@ Room = new function () {
      * Carga una pagina con navegacion ajax
      * 
      */
-    CargarPaginaNavegacionAjax = function (Door, ParamUrl, EsInicio = false) {
+    CargarPaginaNavegacionAjax = async function (Door, ParamUrl, EsInicio = false) {
         sessionStorage.setItem("Door", JSON.stringify(Door));
         var ParametrosUrl = new URLSearchParams(ParamUrl);
         var Metodo = ParametrosUrl.get("M");
@@ -902,8 +906,8 @@ Room = new function () {
             objectsHtml.type = "text";
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
-            if(objectsHtml.maxLength)
-            objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
+            if (objectsHtml.maxLength)
+                objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
@@ -976,8 +980,8 @@ Room = new function () {
                 objectsHtml.name = name;
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
-            if(objectsHtml.maxLength)
-            objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
+            if (objectsHtml.maxLength)
+                objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
@@ -1013,8 +1017,8 @@ Room = new function () {
             objectsHtml["x-value"] = name;
             objectsHtml.value = value;
             objectsHtml.type = "number";
-            if(objectsHtml.maxLength)
-            objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
+            if (objectsHtml.maxLength)
+                objectsHtml.onpaste = "Room.Helpers.InputMaxLengthOnPaste(event,this)";
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
@@ -1298,7 +1302,7 @@ Room = new function () {
          * @param {boolean} required = if the input is required
          * @param {object} objectsHtml = attributes of the input
         */
-        this.HFile = function (name, title, required, objectsHtml = {}) {
+        this.HFile = function (name, title, required, objectsHtml = {},objectsHtmlDiv = {}) {
             var Id = name;
 
             if (objectsHtml["class"] == undefined) {
@@ -1319,8 +1323,8 @@ Room = new function () {
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
-            var Div = new Container("", "");
-            var Label = new Container([title, SimboloRequerido], "label");
+            var Div = new Container("", "",objectsHtmlDiv);
+            var Label = new Container([title, SimboloRequerido], "label", { "for": Id });
 
             objectsHtml["x-value"] = name;
 
@@ -1479,7 +1483,7 @@ Room = new function () {
                 return document.createTextNode("");
             }
             if (typeof container !== 'object' && !Array.isArray(container)) {
-        
+
                 return container;
             }
 
@@ -1487,45 +1491,46 @@ Room = new function () {
                 Elemento = document.createElement(container.Type);
             } else {
                 Elemento = document.createElement("div");
-        
+
             }
+            container.ElementDom = Elemento;
             //Codigo para armar las propiedades
             var PropiedadesProgramables = [];
             if (container.objectsHtml) {
                 Object.keys(container.objectsHtml).forEach(function (propiedad) {
                     if (propiedad.includes("[")) {
-                        PropiedadesProgramables.push([propiedad , container.objectsHtml[propiedad]]);
-                    } 
+                        PropiedadesProgramables.push([propiedad, container.objectsHtml[propiedad]]);
+                    }
                     else if (typeof container.objectsHtml[propiedad] !== "string") {
                         if (!Elemento[propiedad]) {
-                                Elemento[propiedad] = container.objectsHtml[propiedad];
-                                if (propiedad==="onload") 
-                                    Elemento.setAttribute("rjsxLoad","");
+                            Elemento[propiedad] = container.objectsHtml[propiedad];
+                            if (propiedad === "onload")
+                                Elemento.setAttribute("rjsxLoad", "");
                         }
-                        else{
+                        else {
                             console.error("Esta intentando sobre escribir una propiedad", propiedad);
                         }
                     }
-                    else{
+                    else {
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
-                        
-                        if (!Elemento[propiedad] && propiedad !== "style" && propiedad !== "class" ) {
+
+                        if (!Elemento[propiedad] && propiedad !== "style" && propiedad !== "class") {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
                         }
-                        
+
                     }
                 })
             }
 
             //Codigo para armar las propiedades programables
             for (let Prop of PropiedadesProgramables) {
-                
+
                 var StringSinCorchetes = Prop[0].split("[").join("");
                 StringSinCorchetes = StringSinCorchetes.split("]").join("");
                 var codigo = ValidaAtributosEspeciales(StringSinCorchetes, Prop[1], Elemento);
-        
+
                 var Elemto = Elemento;
-        
+
                 var funcion = function (valor) {
                     eval(valor);
                 }
@@ -1533,10 +1538,10 @@ Room = new function () {
                 try {
                     eval(codigo);
                 } catch (error) {
-                    
+
                 }
             }
-        
+
             if (Array.isArray(container.Content)) {
                 for (var item in container.Content) {
                     let Cont = WriteElement(container.Content[item]);
@@ -1545,7 +1550,7 @@ Room = new function () {
                     } else {
                         Elemento.insertAdjacentHTML('beforeend', Cont);
                     }
-        
+
                 }
             } else {
                 let Cont = WriteElement(container.Content);
@@ -1555,11 +1560,11 @@ Room = new function () {
                     Elemento.insertAdjacentHTML('beforeend', Cont);
                 }
             }
-        
+
             return Elemento;
-        
+
         }
-        
+
         /**
          * This function is used to create a container
          * @param {String|Array|Container} Content = content of the container
@@ -1570,6 +1575,10 @@ Room = new function () {
             this.Content = Content;
             this.Type = Type;
             this.objectsHtml = objectsHtml;
+            this.ElementDom = null;
+            // if(this.Type!="")
+            // this.ElementDom = document.createElement(this.Type);
+
             this.Write = async function (Element, position = "beforeend") {
                 /**
                  * Verifica si el objeto Element estÃ¡ definido en el Ã¡mbito global, de lo contrario, 
@@ -1580,15 +1589,16 @@ Room = new function () {
                  */
                 const Elemento = typeof Element === 'object' ? Element : document.querySelector(Element);
                 if (!Elemento) throw `El control ${Element} no fue encontrado`;
+                 
                 if (position == "beforeend")
-                    Elemento.insertAdjacentElement("beforeend",WriteElement(this));
+                    Elemento.insertAdjacentElement("beforeend", WriteElement(this));
                 else if (position == "afterbegin")
-                    Elemento.insertAdjacentElement("afterbegin",WriteElement(this));
+                    Elemento.insertAdjacentElement("afterbegin", WriteElement(this));
                 else if (position == "afterend") {
                     Elemento.insertAdjacentElement("afterend", WriteElement(this));
                 }
                 else if (position == "beforebegin") {
-                    Elemento.insertAdjacentElement("beforebegin",WriteElement(this));
+                    Elemento.insertAdjacentElement("beforebegin", WriteElement(this));
                 }
                 await sleep(200);
             }
@@ -1911,31 +1921,31 @@ Room = new function () {
         this.append(Nombre, Objeto);
     };
 
-    this.Live = function(RutaPantalla) {
-        if(!RutaPantalla){
-          console.error("No se ha definido la pantalla");
-          return;
+    this.Live = function (RutaPantalla) {
+        if (!RutaPantalla) {
+            console.error("No se ha definido la pantalla");
+            return;
         }
-        
+
         if (document.getElementById("RomLivejs")) {
-          return;
-        }        
-        
+            return;
+        }
+
         console.info("Activo... live.js");
         var ContadorLiveScritp = 0;
-      
-      
+
+
         function actualizarScript() {
-      
-          var script = document.createElement('script');
-          script.src = RutaPantalla + '?v=' + ContadorLiveScritp;
-          document.head.appendChild(script);
-          ContadorLiveScritp++;
+
+            var script = document.createElement('script');
+            script.src = RutaPantalla + '?v=' + ContadorLiveScritp;
+            document.head.appendChild(script);
+            ContadorLiveScritp++;
         }
-      
+
         let EstyloIcono = new RoomJsx({
-          "Type": "style",
-          "Content": `
+            "Type": "style",
+            "Content": `
           #RoomRefreshIcon {
             display: inline-block;
             border: 4px solid #f3f3f3;
@@ -1962,38 +1972,67 @@ Room = new function () {
           }
         `
         });
-      
+
         EstyloIcono.Write("head");
-      
+
         let IconoLive = new RoomJsx({
-          "Type": "span",
-          "Content": `<div id="RoomRefreshIcon"></div>`,
-          "Properties": {
-            "id": "RomLivejs",
-            "style": {
-              "top": '10px',
-              "right": '10px',
-              "z-index": '100',
-              "font-size": '20px',
-              "color": 'red',
-              "position": 'fixed'
-            },
-            "onclick": function () {
-              var script = document.querySelector("script[src*='" + RutaPantalla + "']");
-              if (script) {
-                script.remove();
-              }
-              actualizarScript();
-              document.getElementById('RoomRefreshIcon').classList.add('RoomSpin');
-              setTimeout(function () {
-                document.getElementById('RoomRefreshIcon').classList.remove('RoomSpin');
-              }, 800);
+            "Type": "span",
+            "Content": `<div id="RoomRefreshIcon"></div>`,
+            "Properties": {
+                "id": "RomLivejs",
+                "style": {
+                    "top": '10px',
+                    "right": '10px',
+                    "z-index": '100',
+                    "font-size": '20px',
+                    "color": 'red',
+                    "position": 'fixed'
+                },
+                "onclick": async function () {
+                    var script = document.querySelector("script[src*='" + RutaPantalla + "']");
+                    if (script) {
+                        script.remove();
+                    }
+                    actualizarScript();
+                    let Icono = document.getElementById('RoomRefreshIcon');
+                    Icono.classList.add('RoomSpin');
+                    await sleep(800);
+                    Icono.classList.remove('RoomSpin');
+
+                    let Comandos = document.getElementById('RomLivejsCodigo').value.split(";");
+
+                    for (let Comando of Comandos) {
+                        eval(Comando);
+                        await sleep(200);
+                    }
+
+                }
             }
-          }
         });
-      
+
         IconoLive.Write("body");
-      }
+
+        let Codigo = new RoomJsx({
+            "Type": "textarea",
+            "Properties": {
+                "id": "RomLivejsCodigo",
+                "style": {
+                    "top": '40px',
+                    "right": '10px',
+                    "z-index": '100',
+                    "font-size": '20px',
+                    "color": 'red',
+                    "font-weight": 'bold',
+                    "position": 'fixed',
+                    "background-color": "rgba(255, 255, 255, 0.75)",
+                    "width": "300px",
+                    "height": "100px",
+                }
+            }
+        });
+
+        Codigo.Write("body");
+    }
 };
 
 class RoomJsx {
@@ -2007,11 +2046,12 @@ class RoomJsx {
     Required = false;
     Icon = "";
     Headers = [];
-    Body = [];    
+    Body = [];
     Options = [];
     TypeButton = "button";
-    
-    
+    #Container = null;
+
+
     /**
      * Creates a new instance of OneRom.
      * @constructor
@@ -2043,8 +2083,8 @@ class RoomJsx {
         * @param {Object} options.Body - The body of the OneRom.
         * @param {Object} options.Properties - The properties of the OneRom.
      */
-    constructor({ Type, Content, Properties, Rows, Name, Value, Title, Required, Icon, Headers, Body, Options, TypeButton,  }={}) {
-        if(Type===undefined){
+    constructor({ Type, Content, Properties, Rows, Name, Value, Title, Required, Icon, Headers, Body, Options, TypeButton, } = {}) {
+        if (Type === undefined) {
             throw new Error("RoomJsx() sin objeto no valido, lo correcto es RoomJsx({Type:''})");
         }
 
@@ -2058,12 +2098,12 @@ class RoomJsx {
         this.Required = Required;
         this.Icon = Icon;
         this.Headers = Headers;
-        this.Body = Body;        
+        this.Body = Body;
         this.Options = Options;
         this.TypeButton = TypeButton;
-        
+
     }
-    
+
 
     static AddPropiedades(valor, Propiedades) {
         return { "": valor, "Propiedades": Propiedades };
@@ -2071,10 +2111,10 @@ class RoomJsx {
 
     ValidaTranspilarEstilos(Propiedades) {
         if (Propiedades.style) {
-            let style="";
+            let style = "";
             for (let Prop in Propiedades.style) {
-              style+=Prop+":"+Propiedades.style[Prop]+";";  
-            }            
+                style += Prop + ":" + Propiedades.style[Prop] + ";";
+            }
             Propiedades.style = style;
         }
 
@@ -2090,21 +2130,21 @@ class RoomJsx {
         if (Room.Helpers.hasOwnProperty(Elemento.Type)) {
             const Helpers = [];
             const InputComun = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Propiedades) };
-            const Tabla = () => {                
+            const Tabla = () => {
 
-                if (Propiedades.Ajax) {                    
-                    Propiedades.class= "RoomJsxTable";
-                    Propiedades.RoomJsxType="Tabla";  
-                    Propiedades.onload= function(){this.CargarDatos(this);};                  
-                    Propiedades.CargarDatos = 
-                    function({ Filt = this.Filtros, Ord = this.Orders, Pag = this.PaginaActual }){  
-                        let Elemento = this;
-                        RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Filt, Ord, Pag);
-                        Elemento.removeAttribute("AjaxUrl");
-                    }
-                    
+                if (Propiedades.Ajax) {
+                    Propiedades.class = "RoomJsxTable";
+                    Propiedades.RoomJsxType = "Tabla";
+                    Propiedades.onload = function () { this.CargarDatos(this); };
+                    Propiedades.CargarDatos =
+                        function ({ Filt = this.Filtros, Ord = this.Orders, Pag = this.PaginaActual } = this) {
+                            let Elemento = this;
+                            RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Filt, Ord, Pag);
+                            Elemento.removeAttribute("AjaxUrl");
+                        }
+
                 }
-                
+
                 let Tabla = new Room.Helpers[Elemento.Type](Propiedades);
 
                 if (Elemento.Headers) {
@@ -2200,8 +2240,9 @@ class RoomJsx {
                             Grid.SetFila(PropRow);
                             Fila = Object.values(Row)[0];
                         }
+                        //el elemento de la fila tiene que estar binculado con el elemento original
 
-                        for (let Cell of Fila) {
+                        for (var Cell of Fila) {
                             if (typeof Cell === 'string') {
                                 Grid.SetCelda("last", Cell);
                             }
@@ -2223,7 +2264,7 @@ class RoomJsx {
                     }
 
                 }
-                return Grid;
+                return Grid.GetContainer();
             };
 
             Helpers["HInput"] = InputComun;
@@ -2241,23 +2282,36 @@ class RoomJsx {
             Helpers["HRadioButon"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Elemento.arrayRadio, Propiedades) };
             Helpers["HTabla"] = Tabla;
             Helpers["Grid"] = Grid;
-
-            return Helpers[Elemento.Type]();
+            this.#Container = Helpers[Elemento.Type]();
+            return this.#Container;
         }
+
+        //-----------------------------Elemento normal---------------------------------
         let ElementoContainer = new Container([], Elemento.Type, Propiedades);
-        if (typeof Elemento.Content === 'string' || Elemento.Content ===null || Elemento.Content === undefined) {
-            ElementoContainer.Content.push(Elemento.Content);
-        } else {
+
+        //si es un array
+        if (Array.isArray(Elemento.Content)) {
             for (const Child of Elemento.Content) {
                 //si es un string o null lo agrega al container si no se transpila
-                if (typeof Child === 'string' || Child ===null || Child === undefined) {
+                if (typeof Child === 'string' || Child === null || Child === undefined) {
                     ElementoContainer.Content.push(Child);
                 } else {
                     ElementoContainer.Content.push(Child.TranspilarAContainer());
                 }
             }
         }
-        return ElementoContainer;
+        else {
+            //si es un string o null lo agrega al container si no se transpila
+            if (typeof Elemento.Content === 'string' || Elemento.Content === null || Elemento.Content === undefined) {
+                ElementoContainer.Content.push(Elemento.Content);
+            } else {
+                ElementoContainer.Content.push(Elemento.Content.TranspilarAContainer());
+            }
+        }
+
+
+        this.#Container = ElementoContainer;
+        return this.#Container;
     }
 
     static EstilosBotonesPaginacion = {
@@ -2269,48 +2323,48 @@ class RoomJsx {
 
     };
 
-    static BusquedaPaginacion = (Elemnt,Pagina)=>{         
+    static BusquedaPaginacion = (Elemnt, Pagina) => {
         let Elemento = Elemnt.parentElementSpecific("table");
         RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Elemento.Filtros, Elemento.Orders, Pagina);
     };
 
     static BusquedaFiltros = (Elemnt) => {
-        Elemnt.Filtros={};
+        Elemnt.Filtros = {};
         //agregar la clase RoomJsxFiltro
         Elemnt.classList.add("RoomJsxFiltro");
         Elemnt.addEventListener("change", function () {
-            
+
             let Elemento = this.parentElementSpecific("table");
             //optenme todos los inputs con la clase RoomJsxFiltro
             let Filtros = Elemento.Filtros;
-            
+
             let Elementos = document.querySelectorAll(".RoomJsxFiltro");
             for (let Elemento of Elementos) {
                 Elemento.CargarFiltros();
-                let FiltrosInput =Elemento.Filtros;                
-                
-                for (let key in FiltrosInput) {                    
-                    if (FiltrosInput[key]==="") {
+                let FiltrosInput = Elemento.Filtros;
+
+                for (let key in FiltrosInput) {
+                    if (FiltrosInput[key] === "") {
                         delete Filtros[key];
                         continue;
                     }
                     Filtros[key] = FiltrosInput[key];
                 }
             }
-            
-            
+
+
             RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Filtros, Elemento.Orders, 1);
         });
     };
 
     static OrdenarTabla = (Elemnt) => {
-        Elemnt.Orders={};
-        Elemnt.Orden=Elemnt.Orden;
+        Elemnt.Orders = {};
+        Elemnt.Orden = Elemnt.Orden;
         Elemnt.classList.add("RoomJsxOrden");
         Elemnt.addEventListener("click", function () {
             let Elemento = this.parentElementSpecific("table");
             //optenme todos los inputs con la clase RoomJsxFiltro
-            
+
             this.OrdenarTabla();
 
             RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Elemento.Filtros, this.Orders, 1);
@@ -2353,6 +2407,10 @@ class RoomJsx {
             const data = await response.json();
             if (data.error) {
                 HAlerta("error", data.error);
+                return;
+            }
+            if (!data.Rows) {
+                HAlerta("error", "No se recibieron los datos de la tabla");
                 return;
             }
             Elemento.PaginaActual = parseInt(data.PaginaActual);
@@ -2474,7 +2532,7 @@ class RoomJsx {
                     Paginacion.push(BotonPaginacion(">>", `this.CargarDatos(this,${Elemento.TotalPaginas});`));
                 }
 
-               
+
                 for (let ButtonPagina of Paginacion) {
                     Controles.Content.push(ButtonPagina);
                 }
@@ -2505,4 +2563,9 @@ class RoomJsx {
         let Elemento = this.TranspilarAContainer();
         return Elemento.Html();
     }
+
+    GetElementDom(){
+        return this.#Container.ElementDom;
+    }
+
 }
