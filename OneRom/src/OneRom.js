@@ -2387,17 +2387,20 @@ class RoomJsx {
         }
 
         //Si Rows, Headers o Body no son arreglos bidiemnsionales o arreglos vacios se lanza un error
-        if (Rows.length > 0) {
+        if (Rows.length > 0) {            
+            if(!(Rows[0] instanceof RoomJsxAndPropiedades))
             if (!Array.isArray(Rows[0]) || Rows[0].length == 0) {
                 throw new Error("RoomJsx() Rows debe ser un arreglo bidimensional o un arreglo vacio");
             }
         }
         if (Headers.length > 0) {
+            if(!(Headers[0] instanceof RoomJsxAndPropiedades))
             if (!Array.isArray(Headers[0]) || Headers[0].length == 0) {
                 throw new Error("RoomJsx() Headers debe ser un arreglo bidimensional o un arreglo vacio");
             }
         }
         if (Body.length > 0) {
+            if(!(Body[0] instanceof RoomJsxAndPropiedades))
             if (!Array.isArray(Body[0]) || Body[0].length == 0) {
                 throw new Error("RoomJsx() Body debe ser un arreglo bidimensional o un arreglo vacio");
             }
@@ -2449,6 +2452,7 @@ class RoomJsx {
             if (prop == "Headers" || prop == "Body" || prop == "Rows") {
                 this[prop].watchArray((ValorPushado) => {                    
                     //si no es un arreglo el valorpushado se manda un error y se elimina del arreglo
+                    if(!(ValorPushado[0] instanceof RoomJsxAndPropiedades))
                     if (!Array.isArray(ValorPushado[0])) {
                         console.error("El valor que se intenta agregar no es un arreglo");
                         this[prop].splice(this[prop].length - 1, 1);
@@ -2472,7 +2476,7 @@ class RoomJsx {
 
 
     static AddPropiedades(valor, Propiedades) {
-        return { "": valor, "Propiedades": Propiedades };
+        return new RoomJsxAndPropiedades(valor,Propiedades);
     }
 
     ValidaTranspilarEstilos(Propiedades) {
@@ -3170,3 +3174,11 @@ class RoomJsx {
 
 }
 
+class RoomJsxAndPropiedades {
+    _ = null;
+    Propiedades = null;
+    constructor(_, Propiedades) {
+        this._ = _;
+        this.Propiedades = Propiedades;
+    }
+}
