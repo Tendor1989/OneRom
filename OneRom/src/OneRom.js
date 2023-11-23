@@ -1731,7 +1731,7 @@ Room = new function () {
 
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
 
-                        if (!Elemento[propiedad] && propiedad !== "style" && propiedad !== "class") {
+                        if (propiedad !== "style" && propiedad !== "class") {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
                         }
 
