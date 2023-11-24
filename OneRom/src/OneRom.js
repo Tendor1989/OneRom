@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 23 11 2023
+// Last Update  : 24 11 2023
 // ============================================================+
 
 var Door = {};
@@ -1603,7 +1603,7 @@ Room = new function () {
             if (container.Type != "") {
                 Elemento = document.createElement(container.Type);
             } else {
-                Elemento = document.createElement("div");
+                Elemento = document.createElement("Borrar");
 
             }
             container.ElementDom = Elemento;
@@ -1662,7 +1662,14 @@ Room = new function () {
                 for (var item in container.Content) {
                     let Cont = CreateElement(container.Content[item]);
                     if (typeof Cont === 'object') {
-                        Elemento.appendChild(Cont);
+                        if (Cont.nodeName == "BORRAR") {
+                            while(Cont.firstChild){
+                                Elemento.appendChild(Cont.firstChild);
+                            }
+                        } else {
+                            Elemento.appendChild(Cont);
+                        }
+                        
                     } else {
                         Elemento.insertAdjacentHTML('beforeend', Cont);
                     }
@@ -1671,7 +1678,14 @@ Room = new function () {
             } else {
                 let Cont = CreateElement(container.Content);
                 if (typeof Cont === 'object') {
-                    Elemento.appendChild(Cont);
+                    if (Cont.nodeName == "BORRAR") {
+                        while(Cont.firstChild){
+                            Elemento.appendChild(Cont.firstChild);
+                        }
+                    } else {
+                        Elemento.appendChild(Cont);
+                    }
+                    
                 } else {
                     Elemento.insertAdjacentHTML('beforeend', Cont);
                 }
@@ -1700,7 +1714,7 @@ Room = new function () {
                 container.ElementDom = Elemento;
                 nuevo = true;
             } else {
-                Elemento = document.createElement("div");
+                Elemento = document.createElement("Borrar");
                 container.ElementDom = Elemento;
                 nuevo = true;
             }
@@ -1766,7 +1780,13 @@ Room = new function () {
                     let Cont = ReCreateElement(container.Content[item]);
                     if (Cont !== undefined) {
                         if (typeof Cont === 'object') {
-                            Elemento.appendChild(Cont);
+                            if (Cont.nodeName == "BORRAR") {
+                                while(Cont.firstChild){
+                                    Elemento.appendChild(Cont.firstChild);
+                                }
+                            } else {
+                                Elemento.appendChild(Cont);
+                            }
                         } else {
                             Elemento.insertAdjacentHTML('beforeend', Cont);
                         }
@@ -1777,7 +1797,13 @@ Room = new function () {
                 let Cont = ReCreateElement(container.Content);
                 if (Cont !== undefined && nuevo) {
                     if (typeof Cont === 'object') {
-                        Elemento.appendChild(Cont);
+                        if (Cont.nodeName == "BORRAR") {
+                            while(Cont.firstChild){
+                                Elemento.appendChild(Cont.firstChild);
+                            }
+                        } else {
+                            Elemento.appendChild(Cont);
+                        }
                     } else {
                         Elemento.insertAdjacentHTML('beforeend', Cont);
                     }
@@ -1814,15 +1840,14 @@ Room = new function () {
                 const Elemento = typeof Element === 'object' ? Element : document.querySelector(Element);
                 if (!Elemento) throw `El control ${Element} no fue encontrado`;
 
-                if (position == "beforeend")
-                    Elemento.insertAdjacentElement("beforeend", CreateElement(this));
-                else if (position == "afterbegin")
-                    Elemento.insertAdjacentElement("afterbegin", CreateElement(this));
-                else if (position == "afterend") {
-                    Elemento.insertAdjacentElement("afterend", CreateElement(this));
+                let elemDom = CreateElement(this);
+                if (elemDom.nodeName == "BORRAR") {
+                    while(elemDom.firstChild){
+                        Elemento.insertAdjacentElement(position, elemDom.firstChild);
+                    }
                 }
-                else if (position == "beforebegin") {
-                    Elemento.insertAdjacentElement("beforebegin", CreateElement(this));
+                else{
+                    Elemento.insertAdjacentElement(position, elemDom);
                 }
                 await sleep(200);
             }
