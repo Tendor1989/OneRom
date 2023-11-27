@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 24 11 2023
+// Last Update  : 27 11 2023
 // ============================================================+
 
 var Door = {};
@@ -1388,7 +1388,7 @@ Room = new function () {
          * @param {boolean} required = if the input is required
          * @param {object} objectsHtml = attributes of the input
         */
-        this.HFile = function (name, title, required, objectsHtml = {}, objectsHtmlDiv = {}) {
+        this.HFile = function (name, title, required, objectsHtml = {}) {
             var Id = name;
 
             if (objectsHtml["class"] == undefined) {
@@ -1409,7 +1409,7 @@ Room = new function () {
             var CssRequerido = required ? "display: block;width: 100%;border: solid 1px #9acd32;" : "display: block;";
             var SimboloRequerido = new Container("", "span", { "style": CssRequerido });
             var validacion = required ? new Container("", "span", { "id": "Validation-" + Id, "style": "color:#c09853" }) : "";
-            var Div = new Container("", "", objectsHtmlDiv);
+            var Div = new Container("", "");
             var Label = new Container([title, SimboloRequerido], "label", { "for": Id });
 
             objectsHtml["x-value"] = name;
@@ -1742,10 +1742,9 @@ Room = new function () {
                     }
                     else {
 
-
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
-
-                        if (propiedad !== "style" && propiedad !== "class") {
+                        
+                        if (!propiedad.startsWith("on") && propiedad !== "style" && propiedad !== "class") {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
                         }
 
