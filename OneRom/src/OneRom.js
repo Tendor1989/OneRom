@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 27 11 2023
+// Last Update  : 20 12 2023
 // ============================================================+
 
 var Door = {};
@@ -2405,7 +2405,7 @@ class RoomJsx {
         * @param {Object} options.Body - The body of the OneRom.
         * @param {Object} options.Properties - The properties of the OneRom.
      */
-    constructor({ Type, Content, Properties = {}, Rows = [], Name, Value = "", Title, Required, Icon, Headers = [], Body = [], Options, TypeButton, } = { Properties: {}, Headers: [], Body: [], Rows: [] }) {
+    constructor({ Type, Content, Properties = {}, Rows = [], Name, Value = "", Title, Required, Icon, Headers = [], Body = [], Options=[], TypeButton, } = { Properties: {}, Headers: [], Body: [], Rows: [], Options: [] }) {
         if (Type === undefined) {
             throw new Error("RoomJsx() sin objeto no valido, lo correcto es RoomJsx({Type:''})");
         }
@@ -2457,7 +2457,7 @@ class RoomJsx {
 
 
         //-----------------------------------Propiedades Observables----------------------------------------------
-        let ArregloPropiedadesObserver = ["Content", "Properties", "Rows", "Headers", "Body"];
+        let ArregloPropiedadesObserver = ["Content", "Properties", "Rows", "Headers", "Body","Options"];
         let ArregloPropiedadesObserverRecursivas = ["Properties"];
 
         
@@ -2474,11 +2474,27 @@ class RoomJsx {
             }
             
             if (prop == "Headers" || prop == "Body" || prop == "Rows") {
+                
                 this[prop].watchArray((ValorPushado) => {                    
                     //si no es un arreglo el valorpushado se manda un error y se elimina del arreglo
                     if(!(ValorPushado[0] instanceof RoomJsxAndPropiedades))
                     if (!Array.isArray(ValorPushado[0])) {
                         console.error("El valor que se intenta agregar no es un arreglo");
+                        this[prop].splice(this[prop].length - 1, 1);
+                        return;
+                    }
+                    if (this.#Container && this.#Container.ElementDom) {
+                        this.#RetranspilarAContainer();
+                    }
+                });
+            }
+
+            if(prop == "Options"){
+                
+                this[prop].watchArray((ValorPushado) => {
+                    //si el valorpushado no es un objeto con las propiedades {Valor:"", Texto:""} se manda un error y se elimina del arreglo                    
+                    if (!ValorPushado.hasOwnProperty("Valor") || !ValorPushado.hasOwnProperty("Texto")) {
+                        console.error("El valor que se intenta agregar no es un objeto con las propiedades {Valor:'', Texto:''}");
                         this[prop].splice(this[prop].length - 1, 1);
                         return;
                     }
@@ -2749,6 +2765,30 @@ class RoomJsx {
                 }
             };
 
+            const InputButton = () => {
+                let ElementoContainer = this.#Container;
+                ElementoContainer.Content = [];
+                for (let key in Propiedades) {
+                    ElementoContainer.objectsHtml[key] = Propiedades[key];
+                }
+            };
+
+            const InputComboBox = () => {
+                let ElementoContainer = this.#Container;
+                for (let key in Propiedades) {
+                    ElementoContainer.Content[1].objectsHtml[key] = Propiedades[key];
+                }
+                
+                if(ElementoContainer.Content[1].Content.lengt!=this.Options.length){
+                    ElementoContainer.Content[1].ElementDom.innerHTML="";
+                    ElementoContainer.Content[1].Content=[];
+                    for(let Option of this.Options){
+                        ElementoContainer.Content[1].Content.push(new Container(Option.Texto, "option", {"value":Option.Valor}));
+                    }
+                    
+                }
+            };
+
             const Tabla = () => {
 
                 if (Propiedades.Ajax) {
@@ -2903,8 +2943,8 @@ class RoomJsx {
             Helpers["HCheckBox"] = InputComun;
             Helpers["HFile"] = InputComun;
             Helpers["HLink"] = InputComun2;
-            Helpers["HComboBox"] = InputComun;
-            Helpers["HButton"] = InputComun2;
+            Helpers["HComboBox"] = InputComboBox;
+            Helpers["HButton"] = InputButton;
             Helpers["HRadioButon"] = InputRadio;
             Helpers["HTabla"] = Tabla;
             Helpers["Grid"] = Grid;
@@ -3191,7 +3231,37 @@ class RoomJsx {
     }
 
     GetElementDom() {
-        return this.#Container.ElementDom;
+        const Helpers = [];
+        //si Type es HInput, HPasword, HTextArea, HNumeric, HCalendar, HDateTime, HHours, HCheckBox, HFile
+        const InputComun = () => { return this.#Container.Content[1].ElementDom;};
+        const InputComun2 = () => { return this.#Container.Content[2].ElementDom;};
+        const InputRadio = () => { return this.#Container.Content[1].Content[0].Content[0].ElementDom;};
+        const InputButton = () => { return this.#Container.ElementDom;};
+        //Todos los demas
+        const Demas = () => { return this.#Container.ElementDom;};
+        
+        Helpers["HInput"] = InputComun;
+        Helpers["HPasword"] = InputComun;
+        Helpers["HTextArea"] = InputComun;
+        Helpers["HNumeric"] = InputComun;
+        Helpers["HCalendar"] = InputComun;
+        Helpers["HDateTime"] = InputComun;
+        Helpers["HHours"] = InputComun;
+        Helpers["HCheckBox"] = InputComun;
+        Helpers["HFile"] = InputComun;
+        Helpers["HLink"] = InputComun2;
+        Helpers["HComboBox"] = InputComun;
+        Helpers["HButton"] = InputButton;
+        Helpers["HRadioButon"] = InputRadio;
+        Helpers["HTabla"] = Demas;
+        Helpers["Grid"] = Demas;
+        //Si Type no es un indice de Helpers se lanza un error
+        if (!Helpers.hasOwnProperty(this.Type)) {
+            
+            return Demas();
+        }
+        return Helpers[this.Type]();
+
     }
 
 
