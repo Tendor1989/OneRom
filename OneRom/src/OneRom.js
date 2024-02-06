@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 20 12 2023
+// Last Update  : 25 01 2023
 // ============================================================+
 
 var Door = {};
@@ -251,8 +251,8 @@ Room = new function () {
 
 
                 let setter = (...args) => {
-                    let Resultado = originalPush.apply(me, args);                    
-                    handler.call(this,args);
+                    let Resultado = originalPush.apply(me, args);
+                    handler.call(this, args);
                     return Resultado;
                 }
 
@@ -1663,13 +1663,13 @@ Room = new function () {
                     let Cont = CreateElement(container.Content[item]);
                     if (typeof Cont === 'object') {
                         if (Cont.nodeName == "BORRAR") {
-                            while(Cont.firstChild){
+                            while (Cont.firstChild) {
                                 Elemento.appendChild(Cont.firstChild);
                             }
                         } else {
                             Elemento.appendChild(Cont);
                         }
-                        
+
                     } else {
                         Elemento.insertAdjacentHTML('beforeend', Cont);
                     }
@@ -1679,13 +1679,13 @@ Room = new function () {
                 let Cont = CreateElement(container.Content);
                 if (typeof Cont === 'object') {
                     if (Cont.nodeName == "BORRAR") {
-                        while(Cont.firstChild){
+                        while (Cont.firstChild) {
                             Elemento.appendChild(Cont.firstChild);
                         }
                     } else {
                         Elemento.appendChild(Cont);
                     }
-                    
+
                 } else {
                     Elemento.insertAdjacentHTML('beforeend', Cont);
                 }
@@ -1695,7 +1695,7 @@ Room = new function () {
 
         }
 
-        ReCreateElement = function (container) {
+        ReCreateElement = function (container, IsContent) {
             var Elemento = null;
             if (container == null || container == undefined) {
                 return document.createTextNode("");
@@ -1718,8 +1718,8 @@ Room = new function () {
                 container.ElementDom = Elemento;
                 nuevo = true;
             }
-
-            //Elemento.innerHTML = "";
+            if (IsContent)
+                Elemento.innerHTML = "";
             //Codigo para armar las propiedades
             var PropiedadesProgramables = [];
             if (container.objectsHtml) {
@@ -1731,7 +1731,8 @@ Room = new function () {
                     else if (typeof container.objectsHtml[propiedad] === "object" || typeof container.objectsHtml[propiedad] === "function") {
                         //else if (typeof container.objectsHtml[propiedad] !== "string") {
                         if (Elemento[propiedad] && propiedad === "onchange") {
-                            console.error("Esta intentando sobre escribir un evento ", propiedad, " para el buen funcionamiento de OneRom esta accion no sera permitida");
+                            //Se anula la sobre escritura de onchange sin tener que mostrar el error
+                            //console.error("Esta intentando sobre escribir un evento ", propiedad, " para el buen funcionamiento de OneRom esta accion no sera permitida");
                         }
                         else {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
@@ -1743,8 +1744,8 @@ Room = new function () {
                     else {
 
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
-                        
-                        if (!propiedad.startsWith("on") && propiedad!=="value" && propiedad !== "style" && propiedad !== "class") {
+
+                        if (!propiedad.startsWith("on") && propiedad !== "value" && propiedad !== "style" && propiedad !== "class") {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
                         }
 
@@ -1780,7 +1781,7 @@ Room = new function () {
                     if (Cont !== undefined) {
                         if (typeof Cont === 'object') {
                             if (Cont.nodeName == "BORRAR") {
-                                while(Cont.firstChild){
+                                while (Cont.firstChild) {
                                     Elemento.appendChild(Cont.firstChild);
                                 }
                             } else {
@@ -1794,10 +1795,10 @@ Room = new function () {
                 }
             } else {
                 let Cont = ReCreateElement(container.Content);
-                if (Cont !== undefined && nuevo) {
+                if (Cont !== undefined && (nuevo || IsContent)) {
                     if (typeof Cont === 'object') {
                         if (Cont.nodeName == "BORRAR") {
-                            while(Cont.firstChild){
+                            while (Cont.firstChild) {
                                 Elemento.appendChild(Cont.firstChild);
                             }
                         } else {
@@ -1841,11 +1842,11 @@ Room = new function () {
 
                 let elemDom = CreateElement(this);
                 if (elemDom.nodeName == "BORRAR") {
-                    while(elemDom.firstChild){
+                    while (elemDom.firstChild) {
                         Elemento.insertAdjacentElement(position, elemDom.firstChild);
                     }
                 }
-                else{
+                else {
                     Elemento.insertAdjacentElement(position, elemDom);
                 }
                 await sleep(200);
@@ -1854,8 +1855,8 @@ Room = new function () {
                 return CreateElement(this).outerHTML;
             }
 
-            this.ReFresh = function () {
-                ReCreateElement(this);
+            this.ReFresh = function (IsContent = false) {
+                ReCreateElement(this, IsContent);
             }
 
 
@@ -1871,14 +1872,34 @@ Room = new function () {
                     if (Array.isArray(this.Content)) {
                         this.Content.watchArray(() => {
                             if (this.ElementDom) {
-                                this.ReFresh();
+
+                                //Si se agrego un nuevo elemento en el array, se agrega en el ElementoDom
+                                let Cont = ReCreateElement(this.Content[this.Content.length - 1]);
+
+                                if (Cont !== undefined) {
+                                    if (typeof Cont === 'object') {
+                                        if (Cont.nodeName == "BORRAR") {
+                                            while (Cont.firstChild) {
+                                                this.ElementDom.appendChild(Cont.firstChild);
+                                            }
+                                        } else {
+                                            this.ElementDom.appendChild(Cont);
+                                        }
+                                    } else {
+                                        this.ElementDom.insertAdjacentHTML('beforeend', Cont);
+                                    }
+                                }
                             }
 
                         });
                     }
 
                 if (this.ElementDom) {
-                    this.ReFresh();
+                    if (prop == "Content") {
+                        this.ReFresh(true);
+                    } else {
+                        this.ReFresh();
+                    }
                 }
                 return value;
             }, PropiedadesObserverContent, PropiedadesObserverRecursivas);
@@ -2405,34 +2426,56 @@ class RoomJsx {
         * @param {Object} options.Body - The body of the OneRom.
         * @param {Object} options.Properties - The properties of the OneRom.
      */
-    constructor({ Type, Content, Properties = {}, Rows = [], Name, Value = "", Title, Required, Icon, Headers = [], Body = [], Options=[], TypeButton, } = { Properties: {}, Headers: [], Body: [], Rows: [], Options: [] }) {
+    constructor({ Type, Content, Properties = {}, Rows = [], Name, Value = "", Title, Required, Icon, Headers = [], Body = [], Options = [], TypeButton, } = { Properties: {}, Headers: [], Body: [], Rows: [], Options: [] }) {
         if (Type === undefined) {
-            throw new Error("RoomJsx() sin objeto no valido, lo correcto es RoomJsx({Type:''})");
+            throw new Error("RoomJsx() valores minimos de un objeto RoomJsx es RoomJsx({Type:''})");
         }
 
         //Si Rows, Headers o Body no son arreglos bidiemnsionales o arreglos vacios se lanza un error
-        if (Rows.length > 0) {            
-            if(!(Rows[0] instanceof RoomJsxAndPropiedades))
-            if (!Array.isArray(Rows[0]) || Rows[0].length == 0) {
-                throw new Error("RoomJsx() Rows debe ser un arreglo bidimensional o un arreglo vacio");
-            }
+        if (!Array.isArray(Rows))
+            throw new Error("RoomJsx() Rows debe ser un arreglo bidimensional o un arreglo vacio");
+        if (Rows.length > 0) {
+            if (!(Rows[0] instanceof RoomJsxAndPropiedades))
+                if (!Array.isArray(Rows[0]) || Rows[0].length == 0) {
+                    throw new Error("RoomJsx() Rows debe ser un arreglo bidimensional o un arreglo vacio");
+                }
         }
+
+        if (!Array.isArray(Headers))
+            throw new Error("RoomJsx() Headers debe ser un arreglo bidimensional o un arreglo vacio");
         if (Headers.length > 0) {
-            if(!(Headers[0] instanceof RoomJsxAndPropiedades))
-            if (!Array.isArray(Headers[0]) || Headers[0].length == 0) {
-                throw new Error("RoomJsx() Headers debe ser un arreglo bidimensional o un arreglo vacio");
-            }
+            if (!(Headers[0] instanceof RoomJsxAndPropiedades))
+                if (!Array.isArray(Headers[0]) || Headers[0].length == 0) {
+                    throw new Error("RoomJsx() Headers debe ser un arreglo bidimensional o un arreglo vacio");
+                }
         }
+
+        if (!Array.isArray(Body))
+            throw new Error("RoomJsx() Body debe ser un arreglo bidimensional o un arreglo vacio");
         if (Body.length > 0) {
-            if(!(Body[0] instanceof RoomJsxAndPropiedades))
-            if (!Array.isArray(Body[0]) || Body[0].length == 0) {
-                throw new Error("RoomJsx() Body debe ser un arreglo bidimensional o un arreglo vacio");
+            if (!(Body[0] instanceof RoomJsxAndPropiedades))
+                if (!Array.isArray(Body[0]) || Body[0].length == 0) {
+                    throw new Error("RoomJsx() Body debe ser un arreglo bidimensional o un arreglo vacio");
+                }
+        }
+
+        if (!Array.isArray(Options))
+            throw new Error("RoomJsx() Options debe ser un arreglo de objetos con las propiedades {Valor:'', Texto:''}");
+        if (Options.length > 0) {
+            if (!Options[0].hasOwnProperty("Valor") || !Options[0].hasOwnProperty("Texto")) {
+                throw new Error("RoomJsx() Options debe ser un arreglo de objetos con las propiedades {Valor:'', Texto:''}");
             }
         }
 
 
         this.Type = Type;
-        this.Content = Content;
+        //Si es numero cambialo a string
+        if (typeof Content === 'number') {
+            this.Content = Content.toString();
+        }
+        else {
+            this.Content = Content;
+        }
         this.Properties = Properties;
         this.Rows = Rows;
         this.Name = Name;
@@ -2445,11 +2488,12 @@ class RoomJsx {
         this.Options = Options;
         this.TypeButton = TypeButton;
 
-
-
-
-
-
+        //si properties.style no es un objeto se manda un error
+        if (Properties.style) {
+            if (typeof Properties.style !== 'object') {
+                throw new Error("RoomJsx() Properties.style debe ser un objeto");
+            }
+        }
 
 
 
@@ -2457,10 +2501,10 @@ class RoomJsx {
 
 
         //-----------------------------------Propiedades Observables----------------------------------------------
-        let ArregloPropiedadesObserver = ["Content", "Properties", "Rows", "Headers", "Body","Options"];
+        let ArregloPropiedadesObserver = ["Content", "Properties", "Rows", "Headers", "Body", "Options"];
         let ArregloPropiedadesObserverRecursivas = ["Properties"];
 
-        
+
         this.watchAll(function (prop, old, value) {
             if (prop == "Content") {
 
@@ -2472,28 +2516,30 @@ class RoomJsx {
                     });
                 }
             }
-            
+
             if (prop == "Headers" || prop == "Body" || prop == "Rows") {
-                
-                this[prop].watchArray((ValorPushado) => {                    
+                if (!Array.isArray(this[prop]))
+                    throw new Error("RoomJsx() Headers, Body y Rows deben ser arreglos bidimensionales o arreglos vacios");
+                this[prop].watchArray((ValorPushado) => {
                     //si no es un arreglo el valorpushado se manda un error y se elimina del arreglo
-                    if(!(ValorPushado[0] instanceof RoomJsxAndPropiedades))
-                    if (!Array.isArray(ValorPushado[0])) {
-                        console.error("El valor que se intenta agregar no es un arreglo");
-                        this[prop].splice(this[prop].length - 1, 1);
-                        return;
-                    }
+                    if (!(ValorPushado[0] instanceof RoomJsxAndPropiedades))
+                        if (!Array.isArray(ValorPushado[0])) {
+                            console.error("El valor que se intenta agregar no es un arreglo");
+                            this[prop].splice(this[prop].length - 1, 1);
+                            return;
+                        }
                     if (this.#Container && this.#Container.ElementDom) {
                         this.#RetranspilarAContainer();
                     }
                 });
             }
 
-            if(prop == "Options"){
-                
+            if (prop == "Options") {
+                if (!Array.isArray(this[prop]))
+                    throw new Error("RoomJsx() Options deben ser arreglo bidimensionale o arreglo vacio");
                 this[prop].watchArray((ValorPushado) => {
                     //si el valorpushado no es un objeto con las propiedades {Valor:"", Texto:""} se manda un error y se elimina del arreglo                    
-                    if (!ValorPushado.hasOwnProperty("Valor") || !ValorPushado.hasOwnProperty("Texto")) {
+                    if (!ValorPushado[0].hasOwnProperty("Valor") || !ValorPushado[0].hasOwnProperty("Texto")) {
                         console.error("El valor que se intenta agregar no es un objeto con las propiedades {Valor:'', Texto:''}");
                         this[prop].splice(this[prop].length - 1, 1);
                         return;
@@ -2516,7 +2562,7 @@ class RoomJsx {
 
 
     static AddPropiedades(valor, Propiedades) {
-        return new RoomJsxAndPropiedades(valor,Propiedades);
+        return new RoomJsxAndPropiedades(valor, Propiedades);
     }
 
     ValidaTranspilarEstilos(Propiedades) {
@@ -2778,14 +2824,14 @@ class RoomJsx {
                 for (let key in Propiedades) {
                     ElementoContainer.Content[1].objectsHtml[key] = Propiedades[key];
                 }
-                
-                if(ElementoContainer.Content[1].Content.lengt!=this.Options.length){
-                    ElementoContainer.Content[1].ElementDom.innerHTML="";
-                    ElementoContainer.Content[1].Content=[];
-                    for(let Option of this.Options){
-                        ElementoContainer.Content[1].Content.push(new Container(Option.Texto, "option", {"value":Option.Valor}));
+
+                if (ElementoContainer.Content[1].Content.lengt != this.Options.length) {
+                    ElementoContainer.Content[1].ElementDom.innerHTML = "";
+                    ElementoContainer.Content[1].Content = [];
+                    for (let Option of this.Options) {
+                        ElementoContainer.Content[1].Content.push(new Container(Option.Texto, "option", { "value": Option.Valor }));
                     }
-                    
+
                 }
             };
 
@@ -2954,6 +3000,15 @@ class RoomJsx {
         //-----------------------------Elemento normal---------------------------------
 
         let ElementoContainer = this.#Container;
+        if (typeof ElementoContainer.Content === 'string') {
+
+        }
+        if (Array.isArray(Elemento.Content)) {
+
+        }
+        else {
+
+        }
         ElementoContainer.Content = [];
         for (let key in Propiedades) {
             ElementoContainer.objectsHtml[key] = Propiedades[key];
@@ -3233,13 +3288,13 @@ class RoomJsx {
     GetElementDom() {
         const Helpers = [];
         //si Type es HInput, HPasword, HTextArea, HNumeric, HCalendar, HDateTime, HHours, HCheckBox, HFile
-        const InputComun = () => { return this.#Container.Content[1].ElementDom;};
-        const InputComun2 = () => { return this.#Container.Content[2].ElementDom;};
-        const InputRadio = () => { return this.#Container.Content[1].Content[0].Content[0].ElementDom;};
-        const InputButton = () => { return this.#Container.ElementDom;};
+        const InputComun = () => { return this.#Container.Content[1].ElementDom; };
+        const InputComun2 = () => { return this.#Container.Content[2].ElementDom; };
+        const InputRadio = () => { return this.#Container.Content[1].Content[0].Content[0].ElementDom; };
+        const InputButton = () => { return this.#Container.ElementDom; };
         //Todos los demas
-        const Demas = () => { return this.#Container.ElementDom;};
-        
+        const Demas = () => { return this.#Container.ElementDom; };
+
         Helpers["HInput"] = InputComun;
         Helpers["HPasword"] = InputComun;
         Helpers["HTextArea"] = InputComun;
@@ -3257,7 +3312,7 @@ class RoomJsx {
         Helpers["Grid"] = Demas;
         //Si Type no es un indice de Helpers se lanza un error
         if (!Helpers.hasOwnProperty(this.Type)) {
-            
+
             return Demas();
         }
         return Helpers[this.Type]();
