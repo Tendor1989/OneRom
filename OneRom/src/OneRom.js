@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 25 01 2023
+// Last Update  : 21 02 2023
 // ============================================================+
 
 var Door = {};
@@ -1736,7 +1736,7 @@ Room = new function () {
                         }
                         else {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
-                            if (propiedad === "onload")
+                            if (propiedad === "onload" && nuevo)
                                 Elemento.setAttribute("rjsxLoad", "");
                         }
 
