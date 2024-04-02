@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 21 02 2023
+// Last Update  : 01 04 2023
 // ============================================================+
 
 var Door = {};
@@ -78,9 +78,18 @@ Room = new function () {
                 var old = this[prop];
                 var cur = old;
                 var _PropiedadPrivada1 = null;
-                var getter = function () {
 
-                    if (!SingleGetControls && !MultiGetControls) {
+                var Controles = document.querySelectorAll("[x-value='" + nombreControl + "']");
+                var Control = Controles[Controles.length - 1];
+                var getter = function () {
+                    if (Control.type == "radio") {
+                        for (let Control of Controles) {
+                            if (Control.checked) {
+                                return Control.value;
+                            }
+                        }
+                    }
+                    else if (!SingleGetControls && !MultiGetControls) {
                         return cur;
                     }
                     else if (Array.isArray(cur) && _PropiedadPrivada1 == null) {
@@ -100,44 +109,45 @@ Room = new function () {
                         nombre = ArrayNombre.join(".") + "[" + UltimoElemto + "]";
                         nombreControl = nombre;
                     }
-                    var Controles = document.querySelectorAll("[x-value='" + nombreControl + "']");
-                    if (Controles.length > 1) {
-                        _PropiedadPrivada1 = Controles;
-                    } else if (Controles.length == 1) {
-                        _PropiedadPrivada1 = Controles[0];
-                    }
+                    //                    var Controles = document.querySelectorAll("[x-value='" + nombreControl + "']");
+                    //if (Controles.length > 1) {
+                    _PropiedadPrivada1 = Control;
+                    // } else if (Controles.length == 1) {
+                    //     _PropiedadPrivada1 = Controles[0];
+                    // }
 
-                    if (Controles.length == 0) {
+                    if (!Control) {
                         if (Debug) {
                             console.error("Control " + nombreControl + " no existe o fue eliminado");
                         }
-                    } else if (Controles[0].localName == "select" && Controles[0].multiple) {
+                    } else if (Control.localName == "select" && Control.multiple) {
 
                         if (Array.isArray(value)) {
-                            for (var i = 0; i < Controles[0].options.length; i++) {
-                                Controles[0].options[i].selected = value.indexOf(Controles[0].options[i].value) >= 0;
+                            for (var i = 0; i < Control.options.length; i++) {
+                                Control.options[i].selected = value.indexOf(Control.options[i].value) >= 0;
                             }
                         } else if (value != "") {
-                            Controles[0].setAttribute("value", value);
-                            if (Controles[0].value != value && value != "") {
-                                Controles[0].value = value
+                            Control.setAttribute("value", value);
+                            if (Control.value != value && value != "") {
+                                Control.value = value
                             }
                         }
 
 
-                    } else if (Controles[0].type == "radio") {
+                    } else if (Control.type == "radio") {
                         for (let Control of Controles) {
                             if (Control.value == value) {
                                 Control.checked = true;
+                                
                             }
 
                             //                                Control.value=value;
                         }
                     }
-                    else if (Controles[0].type != "file") {
-                        Controles[0].setAttribute("value", value);
-                        if (Controles[0].value != value && value != "") {
-                            Controles[0].value = value
+                    else if (Control.type != "file") {
+                        Control.setAttribute("value", value);
+                        if (Control.value != value && value != "") {
+                            Control.value = value
                         }
                     }
 
@@ -146,6 +156,14 @@ Room = new function () {
                     // return cur;
                 };
 
+                if (delete Control["BindingDoor"]) {
+                    Object.defineProperty(Control, 'BindingDoor', {
+                        get: getter,
+                        set: setter,
+                        enumerable: true,
+                        configurable: true
+                    });
+                }
 
                 // can't watch constants
                 if (delete this[prop]) {
@@ -821,7 +839,40 @@ Room = new function () {
         Control.change = Control.onchange;
         Control.onchange = null;
         Control.onchange = function (e) {
-            toObject(Door, e.target.getAttribute("x-value"), e.target.value);
+
+            let ControlDoor = this;
+            let Valor = e.target.value;
+            if (ControlDoor.type == "file") {
+                Valor = ControlDoor.files;
+            }
+           
+            if (ControlDoor.type == "checkbox") {
+                Valor = ControlDoor.checked;
+            }
+            if (ControlDoor.localName == "select" && ControlDoor.multiple) {
+
+                var Select = [];
+                for (var opcion of ControlDoor.selectedOptions) {
+                    Select.push(opcion.value);
+                }
+                Valor = Select;
+            }
+            if (Valor == "null" || Valor == "undefined") {
+                Valor = null;
+            }
+
+            //si el ultimo caracter de la propiedad es ]
+            if (Control.getAttribute("x-value").charAt(Control.getAttribute("x-value").length - 1) == "]") {
+                toObject(Door, e.target.getAttribute("x-value"), e.target.value); 
+            }
+
+            // if (this.BindingDoor==undefined) {
+            //     toObject(Door, e.target.getAttribute("x-value"), e.target.value);                
+            // }
+            // else{
+            this.BindingDoor = Valor;
+            //}
+
             if (Debug) {
                 console.log(Door);
             }
@@ -833,8 +884,25 @@ Room = new function () {
             return false;
         };
 
+        if (!Control.Leido) {
+            let NombrePropiedad = Control.getAttribute("x-value");
+
+            let NombreFurniture = "";
+            if (NombrePropiedad.includes("[")) {
+                NombreFurniture = NombrePropiedad.split("[")[0];
+            }
+            else {
+                NombreFurniture = NombrePropiedad;
+            }
+            Room.Furniture = Room.Furniture.filter(E => E != "Door." + NombreFurniture);
+        }
         toObject(Door, Control.getAttribute("x-value"), Control.value);
-        this.Leido = true;
+        // let BindingDoor = "Control.BindingDoor = Door." + Control.getAttribute("x-value") + ";";
+
+        // eval(BindingDoor);
+        Control.BindingDoor = null;
+
+        Control.Leido = true;
         window.setTimeout(function () {
             Room.RestartComponents();
         }, 10);
@@ -890,7 +958,7 @@ Room = new function () {
             }
             var Controles = document.querySelectorAll("[x-value='" + nombreControl + "']");
             if (Controles[0].type == "file") {
-                return Controles[0].files;
+                return [];
             }
             if (Controles[0].type == "radio") {
                 for (var Control of Controles) {
@@ -919,6 +987,7 @@ Room = new function () {
         var nombreProp = arryProp[0];
         arryProp.shift();
         if (nombreProp.includes("[")) {
+
             //Pa arreglos
             window.key = nombreProp.split("[")[1];
             key = key.split("]")[0];
@@ -1744,7 +1813,6 @@ Room = new function () {
                     else {
 
                         Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
-
                         if (!propiedad.startsWith("on") && propiedad !== "value" && propiedad !== "style" && propiedad !== "class") {
                             Elemento[propiedad] = container.objectsHtml[propiedad];
                         }
@@ -2260,6 +2328,9 @@ Room = new function () {
         return false;
     };
 
+    console.tablaDoor = function (Objeto) {
+        console.table(JSON.parse(JSON.stringify(Objeto)));
+    }
     //------------------------Live----------------------------------------------
     this.Live = function (RutaPantalla) {
         if (!RutaPantalla) {
@@ -2743,7 +2814,7 @@ class RoomJsx {
             Helpers["HLink"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Propiedades, Elemento.Icon) };
             Helpers["HComboBox"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Elemento.Options, Propiedades) };
             Helpers["HButton"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.TypeButton, Elemento.Value, Propiedades, Elemento.Icon) };
-            Helpers["HRadioButon"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Elemento.arrayRadio, Propiedades) };
+            Helpers["HRadioButon"] = () => { return new Room.Helpers[Elemento.Type](Elemento.Name, Elemento.Value, Elemento.Title, Elemento.Required, Elemento.Options, Propiedades) };
             Helpers["HTabla"] = Tabla;
             Helpers["Grid"] = Grid;
             this.#Container = Helpers[Elemento.Type]();
