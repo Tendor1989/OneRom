@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 01 04 2023
+// Last Update  : 15 04 2024
 // ============================================================+
 
 var Door = {};
@@ -569,6 +569,17 @@ Room = new function () {
         });
     }, 10);
 
+    window.setTimeout(async function () {
+        let Componentes = document.querySelectorAll("[x-component]");
+
+        //si no existe la funcion StartDoorMain quiero que se tarde segun el numero de componentes por 50
+        if (window.RoomMain == undefined) {
+            return;
+        }
+        await sleep(Componentes.length * 10);
+        RoomMain();
+    }, 10);
+
     //------------------------Navegacion Ajax ---------------------------------
     window.onpopstate = async function (event) {
 
@@ -912,7 +923,7 @@ Room = new function () {
      * Reinicia el Door
      */
     this.Restart = function () {
-
+        
         var Controles = document.querySelectorAll("[x-component] [x-value]");
         for (let item of Controles) {
 
