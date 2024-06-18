@@ -2895,7 +2895,6 @@ class RoomJsx {
 
             const InputButton = () => {
                 let ElementoContainer = this.#Container;
-                ElementoContainer.Content = [];
                 for (let key in Propiedades) {
                     ElementoContainer.objectsHtml[key] = Propiedades[key];
                 }
