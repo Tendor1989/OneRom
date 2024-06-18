@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 15 04 2024
+// Last Update  : 18 06 2024
 // ============================================================+
 
 var Door = {};
@@ -138,7 +138,7 @@ Room = new function () {
                         for (let Control of Controles) {
                             if (Control.value == value) {
                                 Control.checked = true;
-                                
+
                             }
 
                             //                                Control.value=value;
@@ -856,7 +856,7 @@ Room = new function () {
             if (ControlDoor.type == "file") {
                 Valor = ControlDoor.files;
             }
-           
+
             if (ControlDoor.type == "checkbox") {
                 Valor = ControlDoor.checked;
             }
@@ -874,7 +874,7 @@ Room = new function () {
 
             //si el ultimo caracter de la propiedad es ]
             if (Control.getAttribute("x-value").charAt(Control.getAttribute("x-value").length - 1) == "]") {
-                toObject(Door, e.target.getAttribute("x-value"), e.target.value); 
+                toObject(Door, e.target.getAttribute("x-value"), e.target.value);
             }
 
             // if (this.BindingDoor==undefined) {
@@ -923,7 +923,7 @@ Room = new function () {
      * Reinicia el Door
      */
     this.Restart = function () {
-        
+
         var Controles = document.querySelectorAll("[x-component] [x-value]");
         for (let item of Controles) {
 
@@ -1855,22 +1855,22 @@ Room = new function () {
 
             if (Array.isArray(container.Content)) {
                 for (var item in container.Content) {
-
                     let Cont = ReCreateElement(container.Content[item]);
-                    if (Cont !== undefined) {
-                        if (typeof Cont === 'object') {
-                            if (Cont.nodeName == "BORRAR") {
-                                while (Cont.firstChild) {
-                                    Elemento.appendChild(Cont.firstChild);
+                    if (Cont !== undefined && (nuevo || IsContent)) {
+                        if (Cont !== undefined) {
+                            if (typeof Cont === 'object') {
+                                if (Cont.nodeName == "BORRAR") {
+                                    while (Cont.firstChild) {
+                                        Elemento.appendChild(Cont.firstChild);
+                                    }
+                                } else {
+                                    Elemento.appendChild(Cont);
                                 }
                             } else {
-                                Elemento.appendChild(Cont);
+                                Elemento.insertAdjacentHTML('beforeend', Cont);
                             }
-                        } else {
-                            Elemento.insertAdjacentHTML('beforeend', Cont);
                         }
                     }
-
                 }
             } else {
                 let Cont = ReCreateElement(container.Content);
