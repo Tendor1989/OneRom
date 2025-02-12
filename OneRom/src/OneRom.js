@@ -3135,8 +3135,12 @@ class RoomJsx {
         //agregar la clase RoomJsxFiltro
         Elemnt.classList.add("RoomJsxFiltro");
         Elemnt.addEventListener("change", function () {
-
             let Elemento = this.parentElementSpecific("table");
+            if(this.TablaDefault!=null){
+                Elemento = document.querySelector(this.TablaDefault);
+
+            }
+            
             //optenme todos los inputs con la clase RoomJsxFiltro
             let Filtros = Elemento.Filtros;
 
