@@ -3169,6 +3169,10 @@ class RoomJsx {
         Elemnt.classList.add("RoomJsxOrden");
         Elemnt.addEventListener("click", function () {
             let Elemento = this.parentElementSpecific("table");
+            if(this.TablaDefault!=null){
+                Elemento = document.querySelector(this.TablaDefault);
+
+            }
             //optenme todos los inputs con la clase RoomJsxFiltro
             this.OrdenarTabla();
             this.Orden = this.Orden === "DESC" ? "ASC" : "DESC";
@@ -3374,7 +3378,7 @@ class RoomJsx {
 
         let filtro = new RoomJsx({
             "Type": "HInput",
-            "Name": "Filtro",
+            "Name": "",
             "Value": "",
             "Title": "",
             "Required": false,
@@ -3426,6 +3430,7 @@ class RoomJsx {
         "Properties": {
             "onload": function () { RoomJsx.OrdenarTabla(this); },
             "TablaDefault": TablaDefault,
+            "x-value": "",
             "Orden": "DESC",
             "style": {
                 "cursor": "pointer",
