@@ -576,7 +576,7 @@ Room = new function () {
         if (window.RoomMain == undefined) {
             return;
         }
-        await sleep(Componentes.length * 10);
+        await sleep(500);
         RoomMain();
     }, 10);
 
