@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 18 06 2024
+// Last Update  : 12 02 2025
 // ============================================================+
 
 var Door = {};
@@ -3166,9 +3166,8 @@ class RoomJsx {
         Elemnt.addEventListener("click", function () {
             let Elemento = this.parentElementSpecific("table");
             //optenme todos los inputs con la clase RoomJsxFiltro
-
             this.OrdenarTabla();
-
+            this.Orden = this.Orden === "DESC" ? "ASC" : "DESC";
             RoomJsx.TablaAyaxCargar(Elemento, Elemento.AjaxUrl, Elemento.Filtros, this.Orders, 1);
         });
     }
@@ -3356,49 +3355,136 @@ class RoomJsx {
         }
     }
 
-    Write(query = "body", position) {
-        let Elemento = this.TranspilarAContainer();
-        Elemento.Write(query, position);
-    }
-
-    Html() {
-        let Elemento = this.TranspilarAContainer();
-        return Elemento.Html();
-    }
-
-    GetElementDom() {
-        const Helpers = [];
-        //si Type es HInput, HPasword, HTextArea, HNumeric, HCalendar, HDateTime, HHours, HCheckBox, HFile
-        const InputComun = () => { return this.#Container.Content[1].ElementDom; };
-        const InputComun2 = () => { return this.#Container.Content[2].ElementDom; };
-        const InputRadio = () => { return this.#Container.Content[1].Content[0].Content[0].ElementDom; };
-        const InputButton = () => { return this.#Container.ElementDom; };
-        //Todos los demas
-        const Demas = () => { return this.#Container.ElementDom; };
-
-        Helpers["HInput"] = InputComun;
-        Helpers["HPasword"] = InputComun;
-        Helpers["HTextArea"] = InputComun;
-        Helpers["HNumeric"] = InputComun;
-        Helpers["HCalendar"] = InputComun;
-        Helpers["HDateTime"] = InputComun;
-        Helpers["HHours"] = InputComun;
-        Helpers["HCheckBox"] = InputComun;
-        Helpers["HFile"] = InputComun;
-        Helpers["HLink"] = InputComun2;
-        Helpers["HComboBox"] = InputComun;
-        Helpers["HButton"] = InputButton;
-        Helpers["HRadioButon"] = InputRadio;
-        Helpers["HTabla"] = Demas;
-        Helpers["Grid"] = Demas;
-        //Si Type no es un indice de Helpers se lanza un error
-        if (!Helpers.hasOwnProperty(this.Type)) {
-
-            return Demas();
+    /**
+     * funcion para crear filtros tipo RoomJSX
+     * @param {String|Object} controlIndentify Tipo de control que se va a crear o un objeto con las propiedades del control default es HInput
+     * @param {String|Function} functionalFiltrin Identificador del filtro o una funcion que se ejecutara al cargar los filtros
+     * @param {StringQueryCss} TablaDefault Tabla donde se aplicara el filtro
+     */
+    static createFiltroTablaRoomJSX(controlIndentify, functionalFiltrin, TablaDefault = null) {
+        //si no tiene valor funcionalFiltrin retornar error
+        if (functionalFiltrin == undefined) {
+            console.error("El parametro functionalFiltrin es requerido");
+            return;
         }
-        return Helpers[this.Type]();
 
+        let filtro = new RoomJsx({
+            "Type": "HInput",
+            "Name": "Filtro",
+            "Value": "",
+            "Title": "",
+            "Required": false,
+            "Properties": {
+                "RoomJsxType": "Filtro",
+                "onload": function () { RoomJsx.BusquedaFiltros(this); },
+                "TablaDefault": TablaDefault
+            }
+
+        });
+
+        if (typeof controlIndentify === 'string') {
+            filtro.Type = controlIndentify;
+        }
+        if (typeof controlIndentify === 'object') {
+            for (const key in controlIndentify) {
+                filtro.Properties[key] = controlIndentify[key];
+            }
+        }
+
+        if (typeof functionalFiltrin === 'string') {
+            filtro.Properties.CargarFiltros = function () {
+                this.Filtros = {};
+                this.Filtros[functionalFiltrin] = this.value
+            };
+        }
+
+        if (typeof functionalFiltrin === 'function') {
+            filtro.Properties.CargarFiltros = functionalFiltrin;
+        }
+        return filtro;
     }
+
+    /**
+     * funcion para crear ordenadores tipo RoomJSX
+     * @param {String|Function} functionalOrder Identificador del filtro o una funcion que se ejecutara al cargar los filtros
+     * @param {StringQueryCss} TablaDefault Tabla donde se aplicara el filtro
+     */
+    static createOrderTablaRoomJSX(functionalOrder, TablaDefault = null) {
+    //si no tiene valor functionalOrder retornar error
+    if (functionalOrder == undefined) {
+        console.error("El parametro functionalOrder es requerido");
+        return;
+    }
+
+    let order = new RoomJsx({
+        "Type": "div",
+        "Content": "▲▼",
+        "Properties": {
+            "onload": function () { RoomJsx.OrdenarTabla(this); },
+            "TablaDefault": TablaDefault,
+            "Orden": "DESC",
+            "style": {
+                "cursor": "pointer",
+            }
+
+        }
+    })
+
+    if (typeof functionalOrder === 'string') {
+        order.Properties.OrdenarTabla = function () {
+            this.Orders[functionalOrder] = this.Orden;
+        };
+    }
+
+    if (typeof functionalOrder === 'function') {
+        order.Properties.OrdenarTabla = functionalOrder;
+    }
+    return order;
+}
+
+Write(query = "body", position) {
+    let Elemento = this.TranspilarAContainer();
+    Elemento.Write(query, position);
+}
+
+Html() {
+    let Elemento = this.TranspilarAContainer();
+    return Elemento.Html();
+}
+
+GetElementDom() {
+    const Helpers = [];
+    //si Type es HInput, HPasword, HTextArea, HNumeric, HCalendar, HDateTime, HHours, HCheckBox, HFile
+    const InputComun = () => { return this.#Container.Content[1].ElementDom; };
+    const InputComun2 = () => { return this.#Container.Content[2].ElementDom; };
+    const InputRadio = () => { return this.#Container.Content[1].Content[0].Content[0].ElementDom; };
+    const InputButton = () => { return this.#Container.ElementDom; };
+    //Todos los demas
+    const Demas = () => { return this.#Container.ElementDom; };
+
+    Helpers["HInput"] = InputComun;
+    Helpers["HPasword"] = InputComun;
+    Helpers["HTextArea"] = InputComun;
+    Helpers["HNumeric"] = InputComun;
+    Helpers["HCalendar"] = InputComun;
+    Helpers["HDateTime"] = InputComun;
+    Helpers["HHours"] = InputComun;
+    Helpers["HCheckBox"] = InputComun;
+    Helpers["HFile"] = InputComun;
+    Helpers["HLink"] = InputComun2;
+    Helpers["HComboBox"] = InputComun;
+    Helpers["HButton"] = InputButton;
+    Helpers["HRadioButon"] = InputRadio;
+    Helpers["HTabla"] = Demas;
+    Helpers["Grid"] = Demas;
+    //Si Type no es un indice de Helpers se lanza un error
+    if (!Helpers.hasOwnProperty(this.Type)) {
+
+        return Demas();
+    }
+    return Helpers[this.Type]();
+
+}
 
 
 
