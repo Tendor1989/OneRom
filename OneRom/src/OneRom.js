@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 12 02 2025
+// Last Update  : 14 03 2025
 // ============================================================+
 
 var Door = {};
@@ -128,6 +128,7 @@ Room = new function () {
                             }
                         } else if (value != "") {
                             Control.setAttribute("value", value);
+                            Control.Container.objectsHtml.value = value;
                             if (Control.value != value && value != "") {
                                 Control.value = value
                             }
@@ -146,6 +147,7 @@ Room = new function () {
                     }
                     else if (Control.type != "file") {
                         Control.setAttribute("value", value);
+                        Control.Container.objectsHtml.value = value;
                         if (Control.value != value && value != "") {
                             Control.value = value
                         }
@@ -882,6 +884,7 @@ Room = new function () {
             // }
             // else{
             this.BindingDoor = Valor;
+            this.Container.objectsHtml.value = Valor;
             //}
 
             if (Debug) {
@@ -1790,16 +1793,54 @@ Room = new function () {
                 Elemento = container.ElementDom;
             }
             else if (container.Type != "") {
-                Elemento = document.createElement(container.Type);
-                container.ElementDom = Elemento;
+                container.ElementDom = document.createElement(container.Type);
                 nuevo = true;
             } else {
-                Elemento = document.createElement("Borrar");
-                container.ElementDom = Elemento;
+                container.ElementDom = document.createElement("Borrar");
                 nuevo = true;
             }
             if (IsContent)
                 Elemento.innerHTML = "";
+            
+            //armar los elementos hijos
+            if (Array.isArray(container.Content)) {
+                for (var item in container.Content) {
+                    let Cont = ReCreateElement(container.Content[item]);
+                    if (Cont !== undefined && (nuevo || IsContent)) {
+                        if (Cont !== undefined) {
+                            if (typeof Cont === 'object') {
+                                if (Cont.nodeName == "BORRAR") {
+                                    while (Cont.firstChild) {
+                                        container.ElementDom.appendChild(Cont.firstChild);
+                                    }
+                                } else {
+                                    container.ElementDom.appendChild(Cont);
+                                }
+                            } else {
+                                container.ElementDom.insertAdjacentHTML('beforeend', Cont);
+                            }
+                        }
+                    }
+                }
+            } else {
+                let Cont = ReCreateElement(container.Content);
+                if (Cont !== undefined && (nuevo || IsContent)) {
+                    if (typeof Cont === 'object') {
+                        if (Cont.nodeName == "BORRAR") {
+                            while (Cont.firstChild) {
+                                container.ElementDom.appendChild(Cont.firstChild);
+                            }
+                        } else {
+                            container.ElementDom.appendChild(Cont);
+                        }
+                    } else {
+                        container.ElementDom.insertAdjacentHTML('beforeend', Cont);
+                    }
+                }
+            }
+
+            
+            
             //Codigo para armar las propiedades
             var PropiedadesProgramables = [];
             if (container.objectsHtml) {
@@ -1810,23 +1851,29 @@ Room = new function () {
                     //si container.objectsHtml[propiedad] es igual a objeto o funcion
                     else if (typeof container.objectsHtml[propiedad] === "object" || typeof container.objectsHtml[propiedad] === "function") {
                         //else if (typeof container.objectsHtml[propiedad] !== "string") {
-                        if (Elemento[propiedad] && propiedad === "onchange") {
+                        if (container.ElementDom[propiedad] && propiedad === "onchange") {
                             //Se anula la sobre escritura de onchange sin tener que mostrar el error
                             //console.error("Esta intentando sobre escribir un evento ", propiedad, " para el buen funcionamiento de OneRom esta accion no sera permitida");
                         }
                         else {
-                            Elemento[propiedad] = container.objectsHtml[propiedad];
+                            container.ElementDom[propiedad] = container.objectsHtml[propiedad];
                             if (propiedad === "onload" && nuevo)
-                                Elemento.setAttribute("rjsxLoad", "");
+                                container.ElementDom.setAttribute("rjsxLoad", "");
                         }
 
                     }
                     else {
-
-                        Elemento.setAttribute(propiedad, container.objectsHtml[propiedad]);
+                        
+                        container.ElementDom.setAttribute(propiedad, container.objectsHtml[propiedad]);
                         if (!propiedad.startsWith("on") && propiedad !== "value" && propiedad !== "style" && propiedad !== "class") {
-                            Elemento[propiedad] = container.objectsHtml[propiedad];
+                            container.ElementDom[propiedad] = container.objectsHtml[propiedad];
                         }
+                        else if(propiedad === "value" && container.Type === "select" ){
+                            container.ElementDom[propiedad] = container.objectsHtml[propiedad];
+                        }
+                        
+
+                        
 
 
                     }
@@ -1838,9 +1885,9 @@ Room = new function () {
 
                 var StringSinCorchetes = Prop[0].split("[").join("");
                 StringSinCorchetes = StringSinCorchetes.split("]").join("");
-                var codigo = ValidaAtributosEspeciales(StringSinCorchetes, Prop[1], Elemento);
+                var codigo = ValidaAtributosEspeciales(StringSinCorchetes, Prop[1], container.ElementDom);
 
-                var Elemto = Elemento;
+                var Elemto = container.ElementDom;
 
                 var funcion = function (valor) {
                     eval(valor);
@@ -1853,43 +1900,9 @@ Room = new function () {
                 }
             }
 
-            if (Array.isArray(container.Content)) {
-                for (var item in container.Content) {
-                    let Cont = ReCreateElement(container.Content[item]);
-                    if (Cont !== undefined && (nuevo || IsContent)) {
-                        if (Cont !== undefined) {
-                            if (typeof Cont === 'object') {
-                                if (Cont.nodeName == "BORRAR") {
-                                    while (Cont.firstChild) {
-                                        Elemento.appendChild(Cont.firstChild);
-                                    }
-                                } else {
-                                    Elemento.appendChild(Cont);
-                                }
-                            } else {
-                                Elemento.insertAdjacentHTML('beforeend', Cont);
-                            }
-                        }
-                    }
-                }
-            } else {
-                let Cont = ReCreateElement(container.Content);
-                if (Cont !== undefined && (nuevo || IsContent)) {
-                    if (typeof Cont === 'object') {
-                        if (Cont.nodeName == "BORRAR") {
-                            while (Cont.firstChild) {
-                                Elemento.appendChild(Cont.firstChild);
-                            }
-                        } else {
-                            Elemento.appendChild(Cont);
-                        }
-                    } else {
-                        Elemento.insertAdjacentHTML('beforeend', Cont);
-                    }
-                }
-            }
+            
             if (nuevo)
-                return Elemento;
+                return container.ElementDom;
         }
 
         /**
@@ -2906,7 +2919,7 @@ class RoomJsx {
                     ElementoContainer.Content[1].objectsHtml[key] = Propiedades[key];
                 }
 
-                if (ElementoContainer.Content[1].Content.lengt != this.Options.length) {
+                if (ElementoContainer.Content[1].Content.length != this.Options.length) {
                     ElementoContainer.Content[1].ElementDom.innerHTML = "";
                     ElementoContainer.Content[1].Content = [];
                     for (let Option of this.Options) {
