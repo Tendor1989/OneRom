@@ -128,7 +128,9 @@ Room = new function () {
                             }
                         } else if (value != "") {
                             Control.setAttribute("value", value);
-                            Control.Container.objectsHtml.value = value;
+                            //si existe .Container.
+                            if (Control.Container)
+                                Control.Container.objectsHtml.value = value;
                             if (Control.value != value && value != "") {
                                 Control.value = value
                             }
@@ -147,7 +149,8 @@ Room = new function () {
                     }
                     else if (Control.type != "file") {
                         Control.setAttribute("value", value);
-                        Control.Container.objectsHtml.value = value;
+                        if (Control.Container)
+                            Control.Container.objectsHtml.value = value;
                         if (Control.value != value && value != "") {
                             Control.value = value
                         }
@@ -884,7 +887,8 @@ Room = new function () {
             // }
             // else{
             this.BindingDoor = Valor;
-            this.Container.objectsHtml.value = Valor;
+            if (this.Container)
+                this.Container.objectsHtml.value = Valor;
             //}
 
             if (Debug) {
@@ -1801,7 +1805,7 @@ Room = new function () {
             }
             if (IsContent)
                 Elemento.innerHTML = "";
-            
+
             //armar los elementos hijos
             if (Array.isArray(container.Content)) {
                 for (var item in container.Content) {
@@ -1839,8 +1843,8 @@ Room = new function () {
                 }
             }
 
-            
-            
+
+
             //Codigo para armar las propiedades
             var PropiedadesProgramables = [];
             if (container.objectsHtml) {
@@ -1863,17 +1867,17 @@ Room = new function () {
 
                     }
                     else {
-                        
+
                         container.ElementDom.setAttribute(propiedad, container.objectsHtml[propiedad]);
                         if (!propiedad.startsWith("on") && propiedad !== "value" && propiedad !== "style" && propiedad !== "class") {
                             container.ElementDom[propiedad] = container.objectsHtml[propiedad];
                         }
-                        else if(propiedad === "value" && container.Type === "select" ){
+                        else if (propiedad === "value" && container.Type === "select") {
                             container.ElementDom[propiedad] = container.objectsHtml[propiedad];
                         }
-                        
 
-                        
+
+
 
 
                     }
@@ -1900,7 +1904,7 @@ Room = new function () {
                 }
             }
 
-            
+
             if (nuevo)
                 return container.ElementDom;
         }
@@ -3149,11 +3153,11 @@ class RoomJsx {
         Elemnt.classList.add("RoomJsxFiltro");
         Elemnt.addEventListener("change", function () {
             let Elemento = this.parentElementSpecific("table");
-            if(this.TablaDefault!=null){
+            if (this.TablaDefault != null) {
                 Elemento = document.querySelector(this.TablaDefault);
 
             }
-            
+
             //optenme todos los inputs con la clase RoomJsxFiltro
             let Filtros = Elemento.Filtros;
 
@@ -3182,7 +3186,7 @@ class RoomJsx {
         Elemnt.classList.add("RoomJsxOrden");
         Elemnt.addEventListener("click", function () {
             let Elemento = this.parentElementSpecific("table");
-            if(this.TablaDefault!=null){
+            if (this.TablaDefault != null) {
                 Elemento = document.querySelector(this.TablaDefault);
 
             }
@@ -3431,82 +3435,82 @@ class RoomJsx {
      * @param {StringQueryCss} TablaDefault Tabla donde se aplicara el filtro
      */
     static createOrderTablaRoomJSX(functionalOrder, TablaDefault = null) {
-    //si no tiene valor functionalOrder retornar error
-    if (functionalOrder == undefined) {
-        console.error("El parametro functionalOrder es requerido");
-        return;
-    }
-
-    let order = new RoomJsx({
-        "Type": "div",
-        "Content": "▲▼",
-        "Properties": {
-            "onload": function () { RoomJsx.OrdenarTabla(this); },
-            "TablaDefault": TablaDefault,
-            "x-value": "",
-            "Orden": "DESC",
-            "style": {
-                "cursor": "pointer",
-            }
-
+        //si no tiene valor functionalOrder retornar error
+        if (functionalOrder == undefined) {
+            console.error("El parametro functionalOrder es requerido");
+            return;
         }
-    })
 
-    if (typeof functionalOrder === 'string') {
-        order.Properties.OrdenarTabla = function () {
-            this.Orders[functionalOrder] = this.Orden;
-        };
+        let order = new RoomJsx({
+            "Type": "div",
+            "Content": "▲▼",
+            "Properties": {
+                "onload": function () { RoomJsx.OrdenarTabla(this); },
+                "TablaDefault": TablaDefault,
+                "x-value": "",
+                "Orden": "DESC",
+                "style": {
+                    "cursor": "pointer",
+                }
+
+            }
+        })
+
+        if (typeof functionalOrder === 'string') {
+            order.Properties.OrdenarTabla = function () {
+                this.Orders[functionalOrder] = this.Orden;
+            };
+        }
+
+        if (typeof functionalOrder === 'function') {
+            order.Properties.OrdenarTabla = functionalOrder;
+        }
+        return order;
     }
 
-    if (typeof functionalOrder === 'function') {
-        order.Properties.OrdenarTabla = functionalOrder;
+    Write(query = "body", position) {
+        let Elemento = this.TranspilarAContainer();
+        Elemento.Write(query, position);
     }
-    return order;
-}
 
-Write(query = "body", position) {
-    let Elemento = this.TranspilarAContainer();
-    Elemento.Write(query, position);
-}
-
-Html() {
-    let Elemento = this.TranspilarAContainer();
-    return Elemento.Html();
-}
-
-GetElementDom() {
-    const Helpers = [];
-    //si Type es HInput, HPasword, HTextArea, HNumeric, HCalendar, HDateTime, HHours, HCheckBox, HFile
-    const InputComun = () => { return this.#Container.Content[1].ElementDom; };
-    const InputComun2 = () => { return this.#Container.Content[2].ElementDom; };
-    const InputRadio = () => { return this.#Container.Content[1].Content[0].Content[0].ElementDom; };
-    const InputButton = () => { return this.#Container.ElementDom; };
-    //Todos los demas
-    const Demas = () => { return this.#Container.ElementDom; };
-
-    Helpers["HInput"] = InputComun;
-    Helpers["HPasword"] = InputComun;
-    Helpers["HTextArea"] = InputComun;
-    Helpers["HNumeric"] = InputComun;
-    Helpers["HCalendar"] = InputComun;
-    Helpers["HDateTime"] = InputComun;
-    Helpers["HHours"] = InputComun;
-    Helpers["HCheckBox"] = InputComun;
-    Helpers["HFile"] = InputComun;
-    Helpers["HLink"] = InputComun2;
-    Helpers["HComboBox"] = InputComun;
-    Helpers["HButton"] = InputButton;
-    Helpers["HRadioButon"] = InputRadio;
-    Helpers["HTabla"] = Demas;
-    Helpers["Grid"] = Demas;
-    //Si Type no es un indice de Helpers se lanza un error
-    if (!Helpers.hasOwnProperty(this.Type)) {
-
-        return Demas();
+    Html() {
+        let Elemento = this.TranspilarAContainer();
+        return Elemento.Html();
     }
-    return Helpers[this.Type]();
 
-}
+    GetElementDom() {
+        const Helpers = [];
+        //si Type es HInput, HPasword, HTextArea, HNumeric, HCalendar, HDateTime, HHours, HCheckBox, HFile
+        const InputComun = () => { return this.#Container.Content[1].ElementDom; };
+        const InputComun2 = () => { return this.#Container.Content[2].ElementDom; };
+        const InputRadio = () => { return this.#Container.Content[1].Content[0].Content[0].ElementDom; };
+        const InputButton = () => { return this.#Container.ElementDom; };
+        //Todos los demas
+        const Demas = () => { return this.#Container.ElementDom; };
+
+        Helpers["HInput"] = InputComun;
+        Helpers["HPasword"] = InputComun;
+        Helpers["HTextArea"] = InputComun;
+        Helpers["HNumeric"] = InputComun;
+        Helpers["HCalendar"] = InputComun;
+        Helpers["HDateTime"] = InputComun;
+        Helpers["HHours"] = InputComun;
+        Helpers["HCheckBox"] = InputComun;
+        Helpers["HFile"] = InputComun;
+        Helpers["HLink"] = InputComun2;
+        Helpers["HComboBox"] = InputComun;
+        Helpers["HButton"] = InputButton;
+        Helpers["HRadioButon"] = InputRadio;
+        Helpers["HTabla"] = Demas;
+        Helpers["Grid"] = Demas;
+        //Si Type no es un indice de Helpers se lanza un error
+        if (!Helpers.hasOwnProperty(this.Type)) {
+
+            return Demas();
+        }
+        return Helpers[this.Type]();
+
+    }
 
 
 
