@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 14 03 2025
+// Last Update  : 21 03 2025
 // ============================================================+
 
 var Door = {};
@@ -1860,7 +1860,9 @@ Room = new function () {
                             //console.error("Esta intentando sobre escribir un evento ", propiedad, " para el buen funcionamiento de OneRom esta accion no sera permitida");
                         }
                         else {
-                            container.ElementDom[propiedad] = container.objectsHtml[propiedad];
+                            if (!(container.objectsHtml.type == "file" && propiedad == "value")) {
+                                container.ElementDom[propiedad] = container.objectsHtml[propiedad];
+                            }
                             if (propiedad === "onload" && nuevo)
                                 container.ElementDom.setAttribute("rjsxLoad", "");
                         }
