@@ -3,7 +3,7 @@
 // Description  : Administrador de objetos html 
 // Author       : Angel Paredes
 // Begin        : agosto 2019
-// Last Update  : 21 03 2025
+// Last Update  : 24 03 2025
 // ============================================================+
 
 var Door = {};
@@ -581,9 +581,11 @@ Room = new function () {
         if (window.RoomMain == undefined) {
             return;
         }
-        await sleep(500);
+        for (let i = 0; i < Componentes.length; i++) {
+            await sleep(50);
+        }
         RoomMain();
-    }, 10);
+    }, 300);
 
     //------------------------Navegacion Ajax ---------------------------------
     window.onpopstate = async function (event) {
@@ -3386,9 +3388,10 @@ class RoomJsx {
      * funcion para crear filtros tipo RoomJSX
      * @param {String|Object} controlIndentify Tipo de control que se va a crear o un objeto con las propiedades del control default es HInput
      * @param {String|Function} functionalFiltrin Identificador del filtro o una funcion que se ejecutara al cargar los filtros
+     * @param {Object} propiedades Propiedades del control
      * @param {StringQueryCss} TablaDefault Tabla donde se aplicara el filtro
      */
-    static createFiltroTablaRoomJSX(controlIndentify, functionalFiltrin, TablaDefault = null) {
+    static createFiltroTablaRoomJSX(controlIndentify, functionalFiltrin, propiedades=null, TablaDefault = null) {
         //si no tiene valor funcionalFiltrin retornar error
         if (functionalFiltrin == undefined) {
             console.error("El parametro functionalFiltrin es requerido");
@@ -3408,6 +3411,16 @@ class RoomJsx {
             }
 
         });
+
+        if (propiedades) {
+            if(propiedades.onload){
+                filtro.Properties.onload  = function () { RoomJsx.BusquedaFiltros(this); propiedades.onload(); };
+            }
+            for (const key in propiedades) {
+                filtro[key] = propiedades[key];
+            }
+        }
+
 
         if (typeof controlIndentify === 'string') {
             filtro.Type = controlIndentify;
