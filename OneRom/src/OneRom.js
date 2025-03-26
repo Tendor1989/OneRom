@@ -889,8 +889,8 @@ Room = new function () {
             // }
             // else{
             this.BindingDoor = Valor;
-            if (this.Container)
-                this.Container.objectsHtml.value = Valor;
+            // if (this.Container)
+            //     this.Container.objectsHtml.value = Valor;
             //}
 
             if (Debug) {
