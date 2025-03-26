@@ -129,8 +129,10 @@ Room = new function () {
                         } else if (value != "") {
                             Control.setAttribute("value", value);
                             //si existe .Container.
-                            if (Control.Container)
+                            if (Control.Container){
+                                Control.Container.objectsHtml.style = Control.style.cssText;
                                 Control.Container.objectsHtml.value = value;
+                            }
                             if (Control.value != value && value != "") {
                                 Control.value = value
                             }
@@ -149,8 +151,10 @@ Room = new function () {
                     }
                     else if (Control.type != "file") {
                         Control.setAttribute("value", value);
-                        if (Control.Container)
+                        if (Control.Container){
+                            Control.Container.objectsHtml.style = Control.style.cssText;
                             Control.Container.objectsHtml.value = value;
+                        }
                         if (Control.value != value && value != "") {
                             Control.value = value
                         }
